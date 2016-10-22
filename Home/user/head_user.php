@@ -1,5 +1,11 @@
 <?php
     session_start();
+     //判断是否已经登录
+    if(empty($_SESSION['home_userinfo'])){
+        header('refresh:3;url=../login/web_login.php');
+        echo '请登录';
+        exit;
+    }
     // 先导入配置文件
     require '../../Common/config.php';
 
@@ -17,16 +23,17 @@
         <meta charset="utf-8"/>
         <link href="../../Admin/public/css/bootstrap.min.css" rel="stylesheet">
         <script src="../../Admin/public/js/jquery-2.1.3.min.js"></script>
-    <script src="../../Admin/public/js/bootstrap.min.js"></script>
+        <script src="../../Admin/public/js/bootstrap.min.js"></script>
         <link type="text/css" rel="stylesheet" href="../public/css/index.css"/>
         </script>
         
-        <style type="text/css">
-            #myCarousel{
-               width: 710px;
-               height:475px;
-            }
-        </style>
+            <style type="text/css">
+                #myCarousel{
+                   width: 710px;
+                   height:475px;
+                }
+            </style>
+    </head>        
     <body>
     <!--                              网页顶部导航                                  -->
 
@@ -34,16 +41,16 @@
         <nav class="top-nav navbar navbar-default" role="navigation">
             <div class="top-head">
                 <div class="top-head-left">
-                <ul class="nav nav-pills">
-                <?php if(isset($_SESSION['home_userinfo'])): ?>
-                    <li><a id="top-title">您好!<?php echo $_SESSION['home_userinfo']['user'] ?>欢迎光临凡客诚品！</a></li>
-                    <li><a href="../login/web_action.php?a=logout">注销</a></li>
-                <?php else: ?>
-                    <li><a href="../login/web_login.php?a=login">登录</a></li>
-                    <li><a href="../login/register.php">注册</a></li>
-                <?php  endif; ?>
-                    <li><a href="#">我的订单</a></li>
-                    <li><a href="#">收藏本站</a></li>
+                    <ul class="nav nav-pills">
+                    <?php if(isset($_SESSION['home_userinfo'])): ?>
+                        <li><a id="top-title">您好!<?php echo $_SESSION['home_userinfo']['user'] ?>欢迎光临凡客诚品！</a></li>
+                        <li><a href="../login/web_action.php?a=logout">注销</a></li>
+                    <?php else: ?>
+                        <li><a href="../login/web_login.php?a=login">登录</a></li>
+                        <li><a href="../login/register.php">注册</a></li>
+                    <?php  endif; ?>
+                        <li><a href="#">我的订单</a></li>
+                        <li><a href="#">收藏本站</a></li>
                     </ul>
                 </div>
                
@@ -52,8 +59,7 @@
                 
                 <div class="top-head-right">
                     <ul class="nav nav-pills">
-                    <li><a href="../main_index.php">返回首页</a></li>
-
+                        <li><a href="../main_index.php">返回首页</a></li>
                         <li class="nav-hide">
                         <a href="#">我的凡客</a>
                         <div class="hidebox"> 

@@ -80,23 +80,22 @@
         // 从结果集获取信息
         $info = mysqli_fetch_assoc($result);
 
-    //判断是否有权登录
-    if($info['level'] > 1){
-        echo '<b style="color:red;">无权登录</b>';
-        header('refresh:3;url=./login.php?s=4');
-        exit;
-    }    
+        //判断是否有权登录
+        if($info['level'] > 1){
+            echo '<b style="color:red;">无权登录</b>';
+            header('refresh:3;url=./login.php?s=4');
+            exit;
+        }    
         
-    //验证密码是否正确    
-    if($info['pass'] === md5($pass)){
-            
+        //验证密码是否正确    
+        if($info['pass'] === md5($pass)){
+                
             // 将用户的信息存储在 session 
             $_SESSION['user'] = $info;    
 
             echo '<b style="color:green;">登录成功！</b>';
             header('refresh:3;url=../index.php?s=ok');
-            }
-            else{
+        }else{
             echo '密码错误！！！！！';
             header('refresh:3;url=./login.php?error=2');
             exit;
@@ -211,7 +210,7 @@
 
         mysqli_set_charset($link , 'utf8');
 
-        $sql = "select *  from `shop_user` where id={$_GET['id']}" ;
+        $sql = "select *  from `shop_user` where id={$id}" ;
         $result = mysqli_query($link , $sql);
 
         // 5.检测错误
@@ -233,22 +232,22 @@
         
          
         if($_SESSION['user']['level']>=$userlist['level']){
-          echo '无权删除';
-          header('refresh:3;url=../user/showuser.php');
-          exit;
+            echo '无权删除';
+            header('refresh:3;url=../user/showuser.php');
+            exit;
         }
         $sql="delete from `shop_user` where id={$id}";
        
         $result=mysqli_query($link,$sql);
-        // var_dump($result);
 
         mysqli_close($link);
         header('refresh:2;url=../user/showuser.php');
+
         break;
 
         default:
             echo '你想干嘛？';
-            break;
+        break;
     }
     exit;
 

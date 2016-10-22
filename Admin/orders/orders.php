@@ -1,6 +1,6 @@
 <?php
  
-// 导入配置文件
+    // 导入配置文件
     require '../../Common/config.php';
 
     // 连接
@@ -9,28 +9,9 @@
     // 设置字符集
     mysqli_set_charset($link , 'utf8');
 
-    
-    
 
     //高级分页
    
-    // 不存在取空，存在取自己
-    $search = isset($_GET['search']) ? $_GET['search'] : '';
-
-    //***********起始范围*******************//
-    $contentStart = isset($_GET['contentStart'])?$_GET['contentStart'] + 0 : 0;
-   
-
-    //****************结束位置************
-    $contentEnd = isset($_GET['contentEnd'])?$_GET['contentEnd'] + 0 :0;//+0触发强制类型转换，转换为int型
-
-   
-
-    //不存在时取空，存在时取自己
-    $content = isset($_GET['content'])?$_GET['content'] : '';
-
-
-
     //  SQL语句
     $sql = "select count(*) total from `shop_orders`";
     //发送执行
@@ -86,27 +67,27 @@
         <div class="form-group">
             <div class="col-sm-12 control-label" style="font-size:16px;font-weight:bold;background:#ccc;text-align:left;">订单信息</div>
         </div>
-            <div class="cart-info2">
-                <table class="cart-table2 table table-hover">
-                    <thead>
-                        <tr>
-                            <td>ID</td>
-                            <td>用户id</td>
-                            <td>联系人姓名</td>
-                            <td>联系人地址</td>
-                            <td>总金额</td>
-                            <td>添加时间</td>
-                            <td>订单状态</td>
-                            <td>操作</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-    <?php 
+        <div class="cart-info2">
+            <table class="cart-table2 table table-hover">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>用户id</td>
+                        <td>联系人姓名</td>
+                        <td>联系人地址</td>
+                        <td>总金额</td>
+                        <td>添加时间</td>
+                        <td>订单状态</td>
+                        <td>操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+<?php 
     $totally=0;
     $status=['新订单','已发货','已收货','无效订单'];
 
     //遍历订单
-   $sql = "select * from `".PIX."orders` order by `id` desc limit {$offset},{$num}";
+    $sql = "select * from `".PIX."orders` order by `id` desc limit {$offset},{$num}";
    
     $result = mysqli_query($link,$sql);
     
@@ -127,30 +108,28 @@
 
     mysqli_free_result($result);
    
-    ?>
+?>
     <?php foreach($orderList as $key => $val): ?>
 
-      
-    
-                        <tr>
-                            <td><?php echo $val['id'] ?></td>
-                            <td><?php echo $val['uid'] ?></td>
-                            <td><?php echo $val['linkman'] ?></td>
-                            <td><?php echo $val['address'] ?></td>
-                            <td>￥ <?php echo $val['total']; ?></td>
-                            <td><?php echo $val['addtime'] ?></td>
-                            <td><?php echo $status[$val['status']] ?></td>
-                            <td><a href="orders_update.php?a=update&id=<?=$val['id'] ?>" class="btn btn-warning">修改</a></td>
-                        </tr>
+                    <tr>
+                        <td><?php echo $val['id'] ?></td>
+                        <td><?php echo $val['uid'] ?></td>
+                        <td><?php echo $val['linkman'] ?></td>
+                        <td><?php echo $val['address'] ?></td>
+                        <td>￥ <?php echo $val['total']; ?></td>
+                        <td><?php echo $val['addtime'] ?></td>
+                        <td><?php echo $status[$val['status']] ?></td>
+                        <td><a href="orders_update.php?a=update&id=<?=$val['id'] ?>" class="btn btn-warning">修改</a></td>
+                    </tr>
     <?php endforeach; ?>
-            
+        
 
 
-                        </tbody>
+                </tbody>
 
-                    </table>
-    
-    </div>
+            </table>
+
+        </div>
         <nav>
             <ul class="pagination">
                 <!-- 
@@ -159,7 +138,7 @@
               
 
                 <li>
-                    <a href="./orders.php?search=<?= $search;?>&content=<?= $content;?>&p=<?= $p - 1;?>" target="main" aria-label="Previous"><span aria-hidden="true">上一页</span></a>
+                    <a href="./orders.php?p=<?= $p - 1;?>" target="main" aria-label="Previous"><span aria-hidden="true">上一页</span></a>
                 </li>
                 <?php
 
@@ -167,9 +146,7 @@
                     $_GET['p'] = $p + 1;
                     // 组装成URL参数
                     $query = http_build_query($_GET);
-                    // echo $query.'<br>';
-                    // ECHO '内容是'.$content.'<br>';
-                    // echo '内ss是'.$search.'<br>';
+                    
                 ?>
 
                 <?php
@@ -183,15 +160,15 @@
                     // 循环输出页码
                     for($i = $start; $i <= $end; $i++){
                         if($p == $i){
-                            echo "<li class='active'><a  href='./orders.php?search={$search}&content={$content}&p={$i}&contentStart={$contentStart}&contentEnd={$contentEnd}'>{$i}</a></li>";
+                            echo "<li class='active'><a  href='./orders.php?p={$i}'>{$i}</a></li>";
                         }else{
-                            echo "<li><a href='./orders.php?search={$search}&content={$content}&p={$i}&contentStart={$contentStart}&contentEnd={$contentEnd}'>{$i}</a></li>";
+                            echo "<li><a href='./orders.php?p={$i}'>{$i}</a></li>";
                         }
                     }
                 ?>
 
                 <li>
-                    <a href="./orders.php?search=<?= $search;?>&content=<?= $content;?>&p=<?= $p + 1;?>"- target="main" aria-label="Next">
+                    <a href="./orders.php?p=<?= $p + 1;?>"- target="main" aria-label="Next">
                     <span aria-hidden="true">下一页</span></a>
                 </li>
                    

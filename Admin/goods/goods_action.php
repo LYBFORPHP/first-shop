@@ -13,40 +13,35 @@
             echo '<pre>';
                 print_r($_FILES);
             echo '</pre>';
-             echo '<pre>';
+            echo '<pre>';
                 print_r($_SESSION);
             echo '</pre>';
            
 
-            
-
-
 
             //接收数据
-             $cateid = $_POST['cateid'];
-             $name = $_POST['goodsname'];
-             $price = $_POST['price'];
-             $store = $_POST['store'];
-             $desc = $_POST['description'];
-             $desc = trim($desc);
-             $time = time();
+            $cateid = $_POST['cateid'];
+            $name = $_POST['goodsname'];
+            $price = $_POST['price'];
+            $store = $_POST['store'];
+            $desc = $_POST['description'];
+            $desc = trim($desc);
+            $time = time();
 
-             //数据验证
-             //
-             //
-             //
-             //
-             //
-             //
-             //
+            //数据验证
+             
 
-             //上传文件
-             //判断是否有上传
-             if($_FILES['myfile']['error'] == 4){
-                //没有上传则使用默认值
+
+
+
+
+            //上传文件
+            //判断是否有上传
+            if($_FILES['myfile']['error'] == 4){
+            //没有上传则使用默认值
                 $picture = 'default.jpg';
+            }else{
 
-             }else{
                 // 用户已经上传
                 // 导入文件
                 require '../../Common/functions.php';
@@ -60,13 +55,13 @@
                 $fileName=$savePath.$_FILES['myfile']['name'];
                 
                 $upRes = upload($filed , $savePath , $maxSize , $allowType);
-                    //返回数组
-                    //如果上传成功，执行缩放
-                    $pic = $savePath . $upRes['name'];
-                    
-                    
-                    //自定义缩放函数zoom()在functions.php中
-                    zoom($pic,$savePath,50,50, $prefix = 's_');
+                //返回数组
+                //如果上传成功，执行缩放
+                $pic = $savePath . $upRes['name'];
+                
+                
+                //自定义缩放函数zoom()在functions.php中
+                zoom($pic,$savePath,50,50, $prefix = 's_');
                 // 商品列表 使用 235,300
                 zoom($pic,$savePath,235,300, $prefix = 'm_');
                 // 商品列表 使用 500,600
@@ -75,16 +70,15 @@
                    
                
                 //保存好不同尺寸缩放图后将原图删除
-                  unlink($pic);//删除上传后生成的原图
-                   unlink($fileName);//删除原图
+                unlink($pic);//删除上传后生成的原图
+                unlink($fileName);//删除原图
 
-                   
 
                 //保存的名字
                 $picture = $upRes['name'];
             }
-                echo '保存在数据库的名字为: '.$picture; 
-                // 4.数据库操作.
+            echo '保存在数据库的名字为: '.$picture; 
+            // 4.数据库操作.
             // 导入配置文件
             require '../../Common/config.php';
 
@@ -107,14 +101,12 @@
                 $error = mysqli_error($link);
 
                 echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
-                // 遗留的问题：已经上传的图片怎么办？  删除
                 header('refresh:3;url=./goods_add.php');
                 exit;
             }
             //如果受影响行大于0，则插入成功
             if(mysqli_affected_rows($link) > 0){
                 echo "<b style='color:green;font-size:1cm;'>插入成功！</b>";
-                echo "<b style='color:green;font-size:1cm;'>最后插入ID：" . mysqli_insert_id($link) . '</b>';
                 header('refresh:3;url=./goods_index.php');
                 exit;
             }
@@ -132,24 +124,19 @@
 
 
         case 'del':
-        echo '执行删除！';
-        echo '<pre>';
-            print_r($_GET);
-        echo '</pre>'; 
-    
-        if($_SESSION['user']['level'] > 1){
+            echo '执行删除！';
+            if($_SESSION['user']['level'] > 1){
 
-                echo '无权下架商品！';
+                echo '无权删除商品！';
                 header('refresh:3;url=./goods_index.php?error=1');
                 exit;
-
             }
 
-        $id = $_GET['id'];
+            $id = $_GET['id'];
         
             $id += 0;   // 触发了数据类型转换,强制转换为int 
         
-        require '../../Common/config.php';
+            require '../../Common/config.php';
             // 1.连接
             $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误信息：' . mysqli_connect_error());
             // 2.设置字符集
@@ -163,78 +150,58 @@
                 $error = mysqli_error($link);
 
                 echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
-                // 遗留的问题：已经上传的图片怎么办？  删除
-                header('refresh:3;url=./add.php');
+                
+                header('refresh:3;url=./goods_index.php');
 
                 exit;
             }
-            echo '输出';
+           
             if(mysqli_affected_rows($link) > 0){
                 $goodlist = mysqli_fetch_assoc($result);
-               echo '<pre>';
-                   print_r($goodlist);
-               echo '</pre>';
                
             }
             $pic = $goodlist['picture'];
-            echo $pic;
-
-
+   
 
             //如果是默认图片，则图片不用删除
             if($pic == 'default.jpg'){
                 echo '默认图片不用删';
-                header('refresh:3;url=./goods_index.php');
-
-            }
-
-            $dirPath = '../../Common/goodsimage/';
-            if(!is_dir($dirPath)) return false;
-        // 路径处理
-        $dirPath = rtrim($dirPath,'/') . '/';
-
-     
-
-        // 打开目录(句柄或标记)
-        $source = opendir($dirPath);
-        // 读取
-       
-        while(false !== ($fileName = readdir($source))){
-            // 跳过 . 和 ..
-            if($fileName == '.' || $fileName == '..') continue;
-            $path = $dirPath . $fileName;
-         
-                echo $path.'<br>';
-                // echo iconv( 'gbk','utf-8' ,$path) . '<br>';
-              if(strstr($path,'_')){
-                $str=explode('_',$path);
-//echo $path.'<br>';
-              //  echo $str[1].'<br>';
-                if($goodlist['picture'] == $str[1] ){echo '删除图片成功';
-//exit;
-                    unlink($path);
+            }else{
+                $dirPath = '../../Common/goodsimage/';
+                if(!is_dir($dirPath)) return false;
+                // 路径处理
+                $dirPath = rtrim($dirPath,'/') . '/';
                 
+                // 打开目录(句柄或标记)
+                $source = opendir($dirPath);
+                // 读取
+         
+                while(false !== ($fileName = readdir($source))){
+                    // 跳过 . 和 ..
+                    if($fileName == '.' || $fileName == '..') continue;
+                    $path = $dirPath . $fileName;
+                 
+                    echo $path.'<br>';
+                      
+                    if(strstr($path,'_')){
+                        $str=explode('_',$path);
        
-              
-               
-              
-                // $suffix = array('jpg','jpeg','png','gif');
-                // $suf = strtolower(pathinfo($path,PATHINFO_EXTENSION));
-                // if(in_array($suf,$suffix)){
-                //  copy($path,$savePath.basename($path));
-                // }
-                // 删除文件
-                // unlink($path);
+                      
+                        if($goodlist['picture'] == $str[1] ){
+                            echo '删除图片成功';
+                            unlink($path);
+                        }
+                    }
+                }
             }
-        }
-        }
        
             $sql = "delete from `shop_goods` where `id` = {$id}";
-                $result = mysqli_query($link , $sql);
-                if(mysqli_affected_rows($link) > 0){
-                    echo '删除成功！3秒后滚';
-                    header('refresh:3;url=./goods_index.php');
-                        }
+            $result = mysqli_query($link , $sql);
+            if(mysqli_affected_rows($link) > 0){
+                echo '删除成功！3秒后滚';
+                header('refresh:3;url=./goods_index.php');
+                exit;
+            }
                
 
 
@@ -249,19 +216,12 @@
 //_____________________________更新_______________________________//
 
         case 'update': 
-        echo '更新';
-                echo '<pre>';
-                    print_r($_POST);
-                echo '</pre>';
-                echo '<pre>';
-                    print_r($_FILES);
-                echo '</pre>';
-       
-
-                 if($_FILES['myfile']['error'] == 4){
-                //没有上传则使用默认值
-                $picture = $_POST['picture'];
-               echo $upRes['name']=$picture;
+            echo '更新';
+          
+            if($_FILES['myfile']['error'] == 4){
+            //没有上传则使用默认值
+            $picture = $_POST['picture'];
+            $upRes['name']=$picture; //保存路径名
                 
               
              }
@@ -278,18 +238,13 @@
                 $allowType = array('image/png','image/jpeg','image/gif','image/jpg');
                 //执行上传
                 $upRes = upload($filed , $savePath , $maxSize , $allowType);
-                    //返回数组
-                   echo '<pre>';
-                       print_r($upRes);
-                   echo '</pre>';
-
-                    
-                    //如果上传成功，执行缩放
-                   $pic = $savePath . $upRes['name'];//图片的完整路径
+    
+                //如果上传成功，执行缩放
+                $pic = $savePath . $upRes['name'];//图片的完整路径
                    
                   
-                    //自定义缩放函数zoom()在functions.php中
-                    zoom($pic,$savePath,50,50, $prefix = 's_');
+                //自定义缩放函数zoom()在functions.php中
+                zoom($pic,$savePath,50,50, $prefix = 's_');
                 // 商品列表 使用 235,300
                 zoom($pic,$savePath,235,300, $prefix = 'm_');
                 // 商品列表 使用 500,600
@@ -297,19 +252,18 @@
                 //保存好不同尺寸缩放图后将原图删除
                 
           
-                echo $pic;
+               
                 unlink($pic);
                 $pic = $savePath.$_FILES['myfile']['name'];
-                echo $pic;
+                
                 unlink($pic);
                 
                 //保存的名字
                 $picture = $upRes['name'];
             }
-                echo '保存在数据库的名字为: '.$picture; 
-
-                // 4.数据库操作.
-              require '../../Common/config.php';
+               
+            // 4.数据库操作.
+            require '../../Common/config.php';
                 $cateid = $_POST['cateid'];
                 $picture = $upRes['name'];
                 $goodsname=$_POST['goodsname'];
@@ -317,8 +271,6 @@
                 $store = $_POST['store'];
                 $description = $_POST['description'];
                 $goodsid = $_POST['goodsid'];
-         
-         echo '图片是'.$picture;
 
             // 1.连接数据库
             $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());;
@@ -328,7 +280,7 @@
 
             // 3.准备SQL语句
             $sql = "update `".PIX."goods` set `cateid`={$cateid},`picture`='{$picture}',`name`='{$goodsname}',`price`={$price},`store`={$store},`description`='{$description}' where `id`={$goodsid}";
-             echo $sql;
+            
              
             // 4.发送执行
             $res = mysqli_query($link , $sql);
@@ -338,16 +290,15 @@
                 $errno = mysqli_errno($link);
                 $error = mysqli_error($link);
 
-                echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
-                // 遗留的问题：已经上传的图片怎么办？  删除
-                header('refresh:3;url=./goods_add.php');
+                echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>"
+                header('refresh:3;url=./goods_update.php');
                 exit;
             }
             //如果受影响行大于0，则插入成功
            
             if(mysqli_affected_rows($link) > 0){
-                echo "<b style='color:green;font-size:1cm;'>成功！</b>";
-                echo "<b style='color:green;font-size:1cm;'>最后插入ID：" . mysqli_insert_id($link) . '</b>';
+                echo "<b style='color:green;font-size:1cm;'>更改成功！</b>";
+              
                 header('refresh:3;url=./goods_index.php');
                 exit;
             }else{echo '无修改';
@@ -362,96 +313,92 @@
 
 
 //                       上架                        //
-          case 'up':
-          echo '上架';
-          echo '<pre>';
-              print_r($_GET);
-          echo '</pre>';
-          $goodsid = $_GET['id'];
-           require '../../Common/config.php';
-           $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());;
+        case 'up':
+            echo '上架';
+      
+            $goodsid = $_GET['id'];
+            require '../../Common/config.php';
+            $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());;
 
-            // // 2.设置字符集
+            // 2.设置字符集
             mysqli_set_charset($link , 'utf8');
 
-            // // 3.准备SQL语句
-           $sql = "update `".PIX."goods` set `status` = 1 where `id`={$goodsid}";
-            echo $sql;
-
-            // // 4.发送执行
+            // 3.准备SQL语句
+            $sql = "update `".PIX."goods` set `status` = 1 where `id`={$goodsid}";
+          
+            // 4.发送执行
             $res = mysqli_query($link , $sql);
 
-            // // 5.检测错误
+            // 5.检测错误
             if(mysqli_errno($link) > 0){
                 $errno = mysqli_errno($link);
-                 $error = mysqli_error($link);
-
-               echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
-            //     // 遗留的问题：已经上传的图片怎么办？  删除
+                $error = mysqli_error($link);
+                echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
+         
                 header('refresh:3;url=./goods_index.php');
                 exit;
-             }
-            // //如果受影响行大于0，则插入成功
-             echo mysqli_affected_rows($link);
+            }
+            //如果受影响行大于0，则插入成功
+            echo mysqli_affected_rows($link);
             if(mysqli_affected_rows($link) > 0){
                 echo "<b style='color:green;font-size:1cm;'>成功！</b>";
-                 echo "<b style='color:green;font-size:1cm;'>最后插入ID：" . mysqli_insert_id($link) . '</b>';
-                 header('refresh:3;url=./goods_index.php');
-               exit;
-            }else{echo '无修改';
-                 header('refresh:3;url=./goods_index.php');
-                }
-                
+                header('refresh:3;url=./goods_index.php');
+                exit;
+            }else{
+                echo '无修改';
+                header('refresh:3;url=./goods_index.php');
+              }
+              
 
-            // //关闭连接
-            // mysqli_close($link);
+            //关闭连接
+            mysqli_close($link);
         break;
           
 
 //               下架                        //
-case 'down':
-          echo '下架';
-          echo '<pre>';
-              print_r($_GET);
-          echo '</pre>';
-          $goodsid = $_GET['id'];
-           require '../../Common/config.php';
-           $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());;
+             
+        case 'down':
+            echo '下架';
+           
+            $goodsid = $_GET['id'];
+            require '../../Common/config.php';
+            $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());;
 
-            // // 2.设置字符集
+            // 2.设置字符集
             mysqli_set_charset($link , 'utf8');
 
-            // // 3.准备SQL语句
-           $sql = "update `".PIX."goods` set `status` = 2 where `id`={$goodsid}";
+            // 3.准备SQL语句
+            $sql = "update `".PIX."goods` set `status` = 2 where `id`={$goodsid}";
             echo $sql;
 
-            // // 4.发送执行
+            // 4.发送执行
             $res = mysqli_query($link , $sql);
 
-            // // 5.检测错误
+            // 5.检测错误
             if(mysqli_errno($link) > 0){
                 $errno = mysqli_errno($link);
-                 $error = mysqli_error($link);
+                $error = mysqli_error($link);
 
-               echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
-            //     // 遗留的问题：已经上传的图片怎么办？  删除
+                echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
+           
                 header('refresh:3;url=./goods_index.php');
                 exit;
-             }
-            // //如果受影响行大于0，则插入成功
-             echo mysqli_affected_rows($link);
+            }
+            //如果受影响行大于0，则插入成功
+            
             if(mysqli_affected_rows($link) > 0){
                 echo "<b style='color:green;font-size:1cm;'>成功！</b>";
-                 echo "<b style='color:green;font-size:1cm;'>最后插入ID：" . mysqli_insert_id($link) . '</b>';
-                 header('refresh:3;url=./goods_index.php');
-               exit;
-            }else{echo '无修改';
-                 header('refresh:3;url=./goods_index.php');
+                
+                header('refresh:3;url=./goods_index.php');
+                exit;
+            }else{
+                echo '无修改';
+                header('refresh:3;url=./goods_index.php');
                 }
                 
 
-            // //关闭连接
-            // mysqli_close($link);
+            //关闭连接
+            mysqli_close($link);
         break;
 
         default:

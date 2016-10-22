@@ -11,7 +11,7 @@
 
     //准备SQL语句
     $sql = "select * from `".PIX."category` order by concat(`path`,`id`)";
-     echo $sql;   
+      
     //发送执行
     $result = mysqli_query($link,$sql);
 
@@ -33,9 +33,7 @@
             $category[]= $row;
         }
     }
-        echo '<pre>';
-            print_r($category);
-        echo '</pre>';    
+          
     //释放资源
     mysqli_free_result($result);
 
@@ -129,8 +127,6 @@
                 </div>
             </div>
         </form>
-
-
     </body>
 </html>
 

@@ -74,33 +74,32 @@
 ?> 
 <!DOCTYPE html>
 <html>
-<head>
-    <title>update</title>
-    <meta charset="utf-8"/>
-    <script src="../public/js/jquery-2.1.3.min.js"></script>
-        <!-- 先引入JS -->
-        <script src="../public/js/bootstrap.min.js"></script>
-        <!-- 引入样式表 -->
-        <link rel="stylesheet" href="../public/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="../public/css/bootstrap-theme.min.css">
-        <style type="text/css">
-        .update-box{
-            width:500px;
-            margin:50px auto;
-        }
+    <head>
+        <title>update</title>
+        <meta charset="utf-8"/>
+        <script src="../public/js/jquery-2.1.3.min.js"></script>
+            <!-- 先引入JS -->
+            <script src="../public/js/bootstrap.min.js"></script>
+            <!-- 引入样式表 -->
+            <link rel="stylesheet" href="../public/css/bootstrap.min.css">
+            <link rel="stylesheet" type="text/css" href="../public/css/bootstrap-theme.min.css">
+            <style type="text/css">
+                .update-box{
+                    width:500px;
+                    margin:50px auto;
+            }
         </style>
     </head>
     <body>
         <div class="update-box">
             <form class="form-horizontal" role="form" action="./goods_action.php?a=update" enctype="multipart/form-data" method="post" >
-  <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">所属分类</label>
-                <div class="col-sm-10">
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">所属分类</label>
+                    <div class="col-sm-10">
                     <select name="cateid" class="form-control ">
                         <option value="0">请选择</option>
                         <?php
-                           
-
+                          
                             // 循环分类
                             foreach($category as $key => $val){
                                 // 计算逗号
@@ -127,62 +126,59 @@
                             
                         ?>
                     </select>
+                    </div>
                 </div>
-            </div>
-    <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label ">图片</label>
-    <div class="col-sm-6 ">
-      <?php if($goodslist['picture']!='default.jpg'):?>
-                <img style="width:50px;" src="../../Common/goodsimage/s_<?php echo $goodslist['picture'];?>">
-                <input type="hidden" name="picture" value="<?php echo $goodslist['picture'] ?>">
-                <?php else: ?>
-                    <img style="width:50px;" src="../../Common/goodsimage/default.jpg?" class="img-circle">
-                    <input type="hidden" name="picture" value="<? ='default.jpg' ?>">
-                <?php endif; ?> 
-                <?php
-                
-    
-   
-                ?>
-                    
-                    <input type ="file" id="exampleInputFile" name="myfile" value="<?php echo $goodslist['picture'] ?>">
-                    <p class    ="help-block">请选择要上传的新图片</p>
-              
-    </div>
-  </div>
-  
-  <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">商品名</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" name='goodsname' value="<?php echo $goodslist['name'];?>" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputEmail3"  class="col-sm-2 control-label">价格</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" name='price' value="<?php echo $goodslist['price'];?>" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputEmail3"  class="col-sm-2 control-label">库存</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" name='store' value="<?php echo $goodslist['store'];?>" >
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputEmail3"  class="col-sm-2 control-label">描述</label>
-    <div class="col-sm-10">
-      <input type="text" name='description' class="form-control" value="<?php echo $goodslist['description'];?>" >
-    </div>
-  </div>
-  
-   <input type="hidden" name="goodsid" value ="<?php echo $_GET['id']; ?>" > 
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <input type="submit" class="btn btn-default" value="提交">
-    </div>
-  </div>
-</form>
+                <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label ">图片</label>
+                    <div class="col-sm-6 ">
+
+                    <?php if($goodslist['picture']!='default.jpg'):?>
+
+                        <img style="width:50px;" src="../../Common/goodsimage/s_<?php echo $goodslist['picture'];?>">
+                        <input type="hidden" name="picture" value="<?php echo $goodslist['picture'] ?>">
+                        <?php else: ?>
+                            <img style="width:50px;" src="../../Common/goodsimage/default.jpg?" class="img-circle">
+                            <input type="hidden" name="picture" value="<? ='default.jpg' ?>">
+                        <?php endif; ?> 
+                       
+                            
+                        <input type ="file" id="exampleInputFile" name="myfile" value="<?php echo $goodslist['picture'] ?>">
+                        <p class    ="help-block">请选择要上传的新图片</p>
+                      
+                    </div>
+                </div>
+      
+                <div class="form-group">
+                    <label for="inputEmail3" class="col-sm-2 control-label">商品名</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name='goodsname' value="<?php echo $goodslist['name'];?>" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3"  class="col-sm-2 control-label">价格</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" name='price' value="<?php echo $goodslist['price'];?>" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3"  class="col-sm-2 control-label">库存</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" name='store' value="<?php echo $goodslist['store'];?>" >
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3"  class="col-sm-2 control-label">描述</label>
+                    <div class="col-sm-10">
+                        <input type="text" name='description' class="form-control" value="<?php echo $goodslist['description'];?>" >
+                    </div>
+                </div>
+                    <input type="hidden" name="goodsid" value ="<?php echo $_GET['id']; ?>" > 
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="submit" class="btn btn-default" value="提交">
+                    </div>
+                </div>
+            </form>
         </div>
     </body>
 </html>

@@ -1,6 +1,6 @@
 <?php
  
-// 导入配置文件
+    // 导入配置文件
     require '../../Common/config.php';
 
     // 连接
@@ -86,23 +86,24 @@
         <div class="form-group">
             <div class="col-sm-12 control-label" style="font-size:16px;font-weight:bold;background:#ccc;text-align:left;">友情链接信息</div>
         </div>
-            <div class="cart-info2">
-                <table class="cart-table2 table table-hover">
-                    <thead>
-                        <tr>
-                            <td>ID</td>
-                            <td>网站名</td>
-                            <td>网址</td>
-                            <td>操作</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-    <?php 
+        <div class="cart-info2">
+            <table class="cart-table2 table table-hover">
+                <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>网站名</td>
+                        <td>网址</td>
+                        <td>操作</td>
+                    </tr>
+                </thead>
+                <tbody>
+<?php
+    //总页数
     $totally=0;
-    $status=['新订单','已发货','已收货','无效订单'];
+   
 
     //遍历订单
-   $sql = "select * from `".PIX."orders` order by `id` desc limit {$offset},{$num}";
+    $sql = "select * from `".PIX."friendslink`";
    
     $result = mysqli_query($link,$sql);
     
@@ -111,50 +112,49 @@
         $errno = mysqli_errno($link);
         $error = mysqli_error($link);
         echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
-        header('refresh:3;url=./orders.php');
+        header('refresh:3;url=./friendslink_index.php');
         exit;
     }
-    $ordersList=[];
+    $friendsLink=[];
     if(mysqli_affected_rows($link)){
         while($row = mysqli_fetch_assoc($result)){
-            $orderList[]=$row;
+            $friendsLink[]=$row;
         }
     }
 
     mysqli_free_result($result);
    
-    ?>
-    <?php foreach($orderList as $key => $val): ?>
 
-      
-    
-                        <tr>
-                            <td><?php echo $val['id'] ?></td>
-                            <td><?php echo $val['uid'] ?></td>
-                            <td><?php echo $val['linkman'] ?></td>
-                            
-                            
-                            <td><a href="orders_update.php?a=update&id=<?=$val['id'] ?>" class="btn btn-warning">修改</a></td>
-                        </tr>
-    <?php endforeach; ?>
+?>
+
+<?php 
+
+    foreach($friendsLink as $key => $val): 
+
+?>
+
+                    <tr>
+                        <td><?php echo $val['id'] ?></td>
+                        <td><?php echo $val['name'] ?></td>
+                        <td><?php echo $val['address'] ?></td>
+                        <td><a href="friendslink_action.php?a=delete&id=<?=$val['id'] ?>" class="btn btn-danger">删除</a></td>
+                    </tr>
+<?php
+
+    endforeach; 
+
+?>
             
-
-
-                        </tbody>
-
-                    </table>
-    
-    </div>
+                </tbody>
+            </table>    
+        </div>
         <nav>
             <ul class="pagination">
-                <!-- 
-                    要把搜索的内容带到下一页
-                -->
-              
-
+               
                 <li>
-                    <a href="./orders.php?search=<?= $search;?>&content=<?= $content;?>&p=<?= $p - 1;?>" target="main" aria-label="Previous"><span aria-hidden="true">上一页</span></a>
+                    <a href="./friendslink_index.php?p=<?= $p - 1;?>" target="main" aria-label="Previous"><span aria-hidden="true">上一页</span></a>
                 </li>
+
                 <?php
 
                     // 先计算下一页
@@ -177,15 +177,15 @@
                     // 循环输出页码
                     for($i = $start; $i <= $end; $i++){
                         if($p == $i){
-                            echo "<li class='active'><a  href='./orders.php?search={$search}&content={$content}&p={$i}&contentStart={$contentStart}&contentEnd={$contentEnd}'>{$i}</a></li>";
+                            echo "<li class='active'><a  href='./friendslink_index.php?p={$i}'>{$i}</a></li>";
                         }else{
-                            echo "<li><a href='./orders.php?search={$search}&content={$content}&p={$i}&contentStart={$contentStart}&contentEnd={$contentEnd}'>{$i}</a></li>";
+                            echo "<li><a href='./friendslink_index.php?p={$i}'>{$i}</a></li>";
                         }
                     }
                 ?>
 
                 <li>
-                    <a href="./orders.php?search=<?= $search;?>&content=<?= $content;?>&p=<?= $p + 1;?>"- target="main" aria-label="Next">
+                    <a href="./friendslink_index.php?p=<?= $p + 1;?>" target="main" aria-label="Next">
                     <span aria-hidden="true">下一页</span></a>
                 </li>
                    

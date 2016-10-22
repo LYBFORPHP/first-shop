@@ -14,21 +14,19 @@
             // 2.数据验证
             $preg='/^[\x{4e00}-\x{9fa5}0-9a-zA-Z][\x{4e00}-\x{9fa5}\w]*$/u';
             if(!preg_match($preg,$catename)){
-        echo '<font color="red">输入错误,请输入正确信息</font>';
+            echo '<font color="red">输入错误,请输入正确信息</font>';
         
-       header('refresh:3;url=./login.php?error=3');
-        exit;
-    }
+            header('refresh:3;url=../login/login.php?error=3');
+            exit;
+            }
 
-        //限制层数不能超过三成
-        echo $path;
-
-        
-        if(substr_count($path,',')>3){
+            //限制层数不能超过三成
+                    
+            if(substr_count($path,',')>3){
             echo '<b style="color:red">不允许超过3层</b>';
-               header('refresh:4;url=./index.php');
+                header('refresh:4;url=../index.php');
                 exit;
-        }
+            }
 
 
 
@@ -57,21 +55,26 @@
 
             // 6.处理
             if(mysqli_affected_rows($link) > 0){
-                echo '插入成功1！';
+                echo '插入成功！';
                 header('refresh:3;url=./index.php?p=<?php echo $p;?>');
             }else{
-                echo '插入失败1！';
+                echo '插入失败！';
                header('refresh:3;url=./add.php');
             }
 
-            // if(mysqli_insert_id($link) > 0){
-            //  echo '插入成功2！';
-            // }
-
+            
             // 7.关闭连接
             mysqli_close($link);
 
             break;
+
+
+
+
+//                           删除区间                              //   
+
+
+                                  
         case 'del':
             echo '删除分类。。。';
             echo '<pre>';
@@ -100,16 +103,17 @@
             $result = mysqli_query($link , $sql);
 
             // 5.判断受影响行
-            echo '受影响行：'. mysqli_affected_rows($link);
+           
             if(mysqli_affected_rows($link) > 0){
-                echo '滚！有子分类！有儿子了，还想来？3秒后滚';
+                echo '还有子分类！';
                 header('refresh:3;url=./index.php');
             }else{
                 $sql = "delete from `shop_category` where `id` = {$id}";
                 $result = mysqli_query($link , $sql);
                 if(mysqli_affected_rows($link) > 0){
-                    echo '删除成功！3秒后滚';
+                    echo '删除成功！';
                     header('refresh:3;url=./index.php');
+                    exit;
                 }
             }   
 

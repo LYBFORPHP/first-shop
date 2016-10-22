@@ -20,7 +20,7 @@
                         <p>关于凡客<p>
                         <p><a href="#">公司简介</a></p>
                         <p><a href="#"><b>联系我们</b></a></p>
-                        <p><a href="#">友情链接</a></p>
+                        <p><a href="./friendslink.php">友情链接</a></p>
                     </li>
                     <li class="foot-info-box-list"><p>新手指南<p>
                         <p><a href="#">账户注册</a></p>

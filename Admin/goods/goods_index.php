@@ -60,7 +60,7 @@
             if($content==''){
                 $where = '';
             }else{  
-                $content +=0;
+                $content +=0; // 触发强制类型转换
                 $where = "where `id` = {$content}";
             }
             
@@ -116,23 +116,21 @@
     //  SQL语句
     $sql = "select count(*) total from `shop_goods` {$where}";
     //发送执行
-     echo $sql;
     $result = mysqli_query($link , $sql);
     
-
     $total = 0;
     //判断
     if(mysqli_affected_rows($link)){
-        $total = mysqli_fetch_assoc($result);//$total = Array( [total] => 7 )
-        //取出数组中第一个值，即将总页数取出
-        $total = $total['total'];//$total['total']中'total'为count(*)的别名写作: [count(*)] => 7/total => 7 
+        $total = mysqli_fetch_assoc($result);//$total = Array( [total] => 总数 )
+        //取出数组中第一个值，即将总数取出
+        $total = $total['total'];//$total['total']中'total'为count(*)的别名写作: [count(*)] => 总页数/total => 总数 
     }
 
     //每页显示行数
     $num = 2;
    
     
-     //总页数至少为一页
+    //总页数至少为一页
     $totalPage = max(1,ceil($total / $num));
    
     //当前页数
@@ -153,7 +151,7 @@
     $sql = "select * from `".PIX."goods` {$where} order by `id` desc limit {$offset},{$num}";
 
         
-         // 发送
+    // 发送
     $result = mysqli_query($link , $sql);
 
     // 检测错误
@@ -339,31 +337,37 @@
                 <td><?php echo $val['status']; ?></td>
                 <td><?php echo date('Y-m-d',$val['addtime']); ?></td>
                 <td>
-                    <script type="text/javascript" language="javascript">
 
-                function confirmAct()
-                {
-                if(confirm('确定要删除该商品?'))
-                {
-                return true;
-                }
-                return false;
-                }
+                <script type="text/javascript" language="javascript">
+
+                    function confirmAct()
+                    {
+                        if(confirm('确定要删除该商品?'))
+                        {
+                        return true;
+                        }
+                        return false;
+                    }
                 
                 </script>
                 <a href="./goods_action.php?a=up&id=<?php echo $val['id'];?>" class="btn btn-success">上架</a>
                 <a href="./goods_action.php?a=down&id=<?php echo $val['id'];?>" class="btn btn-warning">下架</a>
-                 <a href="./goods_update.php?id=<?php echo $val['id'];?>" class="btn btn-warning">修改</a>
-                
+                <a href="./goods_update.php?id=<?php echo $val['id'];?>" class="btn btn-warning">修改</a>
                 <a href="./goods_action.php?a=del&id=<?php echo $val['id'];?>" class="btn btn-danger" onclick="return confirmAct();">删除</a>
                
                
                </td>
             </tr>  
-             <?php endforeach; ?>   
-             <?php if(empty($goodslist)){
-                echo "<b>未找到符合条件的商品！！</b>";
+
+            <?php 
+                endforeach; 
+            ?>   
+
+            <?php 
+                if(empty($goodslist)){
+                    echo "<b>未找到符合条件的商品！！</b>";
             } 
+
             ?>
         </table>
 

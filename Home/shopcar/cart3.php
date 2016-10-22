@@ -15,11 +15,11 @@
     //发送执行
       
     $result = mysqli_query($link,$sql);
-     if(mysqli_errno($link) > 0){
+    if(mysqli_errno($link) > 0){
         $errno = mysqli_errno($link);
         $error = mysqli_error($link);
         echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
-        header('refresh:3;url=./cart3.php');
+        header('refresh:3;url=./cart3.php?error=3');
         exit;
     }
     if(mysqli_affected_rows($link)){
@@ -27,9 +27,8 @@
        
         $goodsNum = $goodsNum['total'];//$goodsNum['goodsNum']中'goodsNum'为count(*)的别名 [goodsNum(*)] => 个数/goodsNum => 个数
     }
-    
+    //总计初始化
     $totally=0;
-
 
     $link = mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误信息：' . mysqli_connect_error());
     // 2.设置字符集
@@ -84,114 +83,98 @@
     ?>
 
 
-<div class="form-group cart3-top">
-恭喜你！下单成功！！
-</div>
-<div class="cart-info3">
-    <table class="cart-table3 table table-hover">
-    <thead>
-    <tr><td style="font-size:16px;font-weight:bold;color:#a10000;">商品详情</td></tr>
-    <tr>
-    <td>订单号</td>
-    <td>商品ID</td>
-    <td>商品名称</td>
-    <td>图片</td>
-    <td>单价</td>
-    <td>数量</td>
-    <td>小计</td>
-    <?php if(mysqli_affected_rows($link)){
-        while($rows = mysqli_fetch_assoc($result)){
-            $goodList = $rows;
-            ?>
-    </tr>
-    </thead>
-    <tbody>
-   <tr>
-    <td><?php echo $orderid ;?></td>
-    <td><?php echo $goodList['id'] ?></td>
-    <td><?php echo $goodList['name'] ?></td>
-    <td><img src="../../Common/goodsimage/s_<?php echo $goodList['picture'] ?>" style="width:50px;"></td>
+        <div class="form-group cart3-top">
+        恭喜你！下单成功！！
+        </div>
+        <div class="cart-info3">
+            <table class="cart-table3 table table-hover">
+                <thead>
+                    <tr><td style="font-size:16px;font-weight:bold;color:#a10000;">商品详情</td></tr>
+                    <tr>
+                        <td>订单号</td>
+                        <td>商品ID</td>
+                        <td>商品名称</td>
+                        <td>图片</td>
+                        <td>单价</td>
+                        <td>数量</td>
+                        <td>小计</td>
 
-    <td>￥ <?php echo $goodList['price']; ?></td>
-
-
-
-    <td>
-
-   
-
-    <input type="text" style="width:25px; border:none;" name="num" value="<?php echo $goodList['num']; ?>" readonly>
-
-   
-
-    </td>
-
-
-
-    <td><?php echo $goodList['num']*$goodList['price']; ?></td>
-    
-    </tr>
-    
-    
-    
-    <?php 
-         } 
-    }
-   
-
-    $totally += $goodList['num']*$goodList['price'];
+    <?php   if(mysqli_affected_rows($link)){
+                while($rows = mysqli_fetch_assoc($result)){
+                    $goodList = $rows;
     ?>
 
-   
-   
+                    </tr>
+                </thead>
+                <tbody>
+                   <tr>
+                        <td><?php echo $orderid ;?></td>
+                        <td><?php echo $goodList['id'] ?></td>
+                        <td><?php echo $goodList['name'] ?></td>
+                        <td><img src="../../Common/goodsimage/s_<?php echo $goodList['picture'] ?>" style="width:50px;"></td>
 
-    
+                        <td>￥ <?php echo $goodList['price']; ?></td>
+                        <td>
+          
+                        <input type="text" style="width:25px; border:none;" name="num" value="<?php echo $goodList['num']; ?>" readonly>
 
-    </tbody>
+                        </td>
 
-    </table>
-    <ul class="pagination">
-   
-                <!-- 
-                    分页
-                -->
-              
+                        <td><?php echo $goodList['num']*$goodList['price']; ?></td>
+                        
+                    </tr>
+     
+    <?php 
+                } 
+            }
+           
+            //计算总价
+            $totally += $goodList['num']*$goodList['price'];
+            ?>
+
+                </tbody>
+
+            </table>
+            <ul class="pagination">
+
+            <!--            分页              -->
+                      
 
                 <li>
                     <a href="./cart3.php?p=<?= $p - 1;?>&orderid=<?= $orderid;?>" aria-label="Previous"><span aria-hidden="true">上一页</span></a>
                 </li>
-               
-                <?php
-                    // 起始页码
-                    $start = $p - 5;
-                    $start = max($start , 1);
-                    // 结束页码
-                    $end = $p + 5;
-                    $end = min($end , $totalPage);
+                       
+            <?php
+                // 起始页码
+                $start = $p - 5;
+                $start = max($start , 1);
+                // 结束页码
+                $end = $p + 5;
+                $end = min($end , $totalPage);
 
-                    // 循环输出页码
-                    for($i = $start; $i <= $end; $i++){
-                        if($p == $i){
-                            echo "<li class='active'><a  href='./cart3.php?p={$i}&orderid={$orderid}'>{$i}</a></li>";
-                        }else{
-                            echo "<li><a  href='./cart3.php?p={$i}&orderid={$orderid}'>{$i}</a></li>";
-                        }
+                // 循环输出页码
+                for($i = $start; $i <= $end; $i++){
+                    if($p == $i){
+                        echo "<li class='active'><a  href='./cart3.php?p={$i}&orderid={$orderid}'>{$i}</a></li>";
+                    }else{
+                        echo "<li><a  href='./cart3.php?p={$i}&orderid={$orderid}'>{$i}</a></li>";
                     }
-                ?>
+                }
+            ?>
 
                 <li>
                     <a href="./cart3.php?p=<?= $p + 1;?>&orderid=<?= $orderid;?>" aria-label="Next">
                     <span aria-hidden="true">下一页</span></a>
                 </li>
-                   
+                           
             </ul>
-    <div class="form-group">
-    <div class="cart3-total col-sm-offset-10 col-sm-10" >总计：<?php echo $totally ?></div>
-    <input type="hidden" name="totally" value="<?= $totally;?>">
-    <div><a class="btn btn-success col-sm-offset-10" href="../main_index.php" role="button">返回首页</a></div>
-    </div>
+            <div class="form-group">
+                <div class="cart3-total col-sm-offset-10 col-sm-10" >总计：<?php echo $totally ?></div>
+                <input type="hidden" name="totally" value="<?= $totally;?>">
+                <div><a class="btn btn-success col-sm-offset-10" href="../main_index.php" role="button">返回首页</a></div>
+            </div>
 
-    </div>
+        </div>
 
 
 

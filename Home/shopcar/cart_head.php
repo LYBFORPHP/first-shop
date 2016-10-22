@@ -1,7 +1,13 @@
 <?php
     session_start();
     require '../../Common/config.php';
+    if(empty($_SESSION['home_userinfo'])){
+        header('refresh:3;url=../login/web_login.php');
+        echo '请登录';
+        exit;
+    }
     ob_start();
+
 ?>
 
 

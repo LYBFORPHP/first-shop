@@ -23,7 +23,7 @@
         <meta charset="utf-8"/>
         <link href="../Admin/public/css/bootstrap.min.css" rel="stylesheet">
         <script src="../Admin/public/js/jquery-2.1.3.min.js"></script>
-    <script src="../Admin/public/js/bootstrap.min.js"></script>
+        <script src="../Admin/public/js/bootstrap.min.js"></script>
         <link type="text/css" rel="stylesheet" href="./public/css/index.css"/>
         </script>
         
@@ -92,7 +92,7 @@
 
 
 
-         <!--                         搜索部分                                   -->
+        <!--                         搜索部分                                   -->
         <div class="top-search">
             <a href="#"><div class="top-search-left"></div></a>
             <div class="top-search-box">
@@ -103,11 +103,10 @@
                     </div>
 
        
-                    <a href="#">
+                    <a href="shopcar/cart.php">
                         <div class="top-search-cart">
-                            <div class="top-search-cart-icon">
-                            </div>
-                            <a href="shopcar/cart.php"><p>我的购物车</p></a>
+                            <div class="top-search-cart-icon"></div>
+                            <p>我的购物车</p>
                         </div>
                     </a>
                 </div>
@@ -156,11 +155,15 @@
 
                     ?>
                     <ul class="cate-nav-ul nav nav-stacked" >
-                        <?php foreach($topCate as $key => $val): ?>
-                            <li class="cate-nav-li">
-                                <a class="cate-link" style="background-color:#E5E6E6;"><?= $val['name']; ?></a>
+                       
+                        <?php 
+                            foreach($topCate as $key => $val): 
+                        ?>
 
-                                <div class="cate-hidden-two">
+                        <li class="cate-nav-li">
+                            <a class="cate-link" style="background-color:#E5E6E6;"><?= $val['name']; ?></a>
+
+                            <div class="cate-hidden-two">
 
 
                                 <?php
@@ -177,11 +180,16 @@
                                     mysqli_free_result($result);
                                     }
                                 ?>
-                                    <?php foreach($secondCate as $k2 => $v2 ):?>
+
+                                <?php 
+                                    foreach($secondCate as $k2 => $v2 ):
+                                ?>
+
                                     <p class="cate-p"><?= $v2['name'];?></p>
 
 
                                 <?php 
+
                                     $sql = "select * from shop_category where `pid` = {$v2['id']}";
 
 
@@ -197,19 +205,38 @@
                                     }
 
                                 ?>
-                                    <?php foreach($thirdCate as $k3 => $v3 ):?>
-                                    <div class="cate-hidden-three">
+                                    
+                                <?php
 
-                                        <a href="./showgoods.php?cid=<?= $v3['id'];?>"><?= $v3['name'];?></a>
+                                    foreach($thirdCate as $k3 => $v3 ):
 
-                                    </div>
-                                        <?php endforeach; ?>
-                               
-                                    <?php endforeach; ?>
+                                ?>
+
+                                <div class="cate-hidden-three">
+
+                                    <a href="./showgoods.php?cid=<?= $v3['id'];?>"><?= $v3['name'];?></a>
+
                                 </div>
-                            </li>
-                        <?php endforeach; ?>
 
+                                <?php 
+
+                                    endforeach; 
+
+                                ?>
+                               
+                                <?php 
+
+                                    endforeach; 
+
+                                ?>
+
+                            </div>
+                        </li>
+                        <?php
+
+                            endforeach;
+
+                        ?>
                     </ul>
                 </div>
 
@@ -217,9 +244,7 @@
 
            
              <!--                        中部大广告                                    -->
-                <div class="main-foucs">
-                    
-                    
+                <div class="main-foucs"> 
                     <div id="myCarousel" class="carousel slide ">
                         <ol class="carousel-indicators">
                             <li data-target="#myCarousel" data-slide-to="0" class="active">
@@ -245,6 +270,5 @@
                             <div class="main-foucs-right-ad"><a href="#"><img src="public/pic/focus-ad3.jpg"/></a></div>
                         </div>
                 </div>
-
         </div>
 

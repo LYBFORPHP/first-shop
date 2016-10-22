@@ -4,9 +4,9 @@
    
    //判断是否已经登录
    if(empty($_SESSION['user'])){
-    header('refresh:3;url=./login/login.php');
-    echo '请登录';
-    exit;
+        header('refresh:3;url=./login/login.php');
+        echo '请登录';
+        exit;
    }
    
 ?>
@@ -49,17 +49,16 @@
             </div> 
             <div class="top-right">
             <!-- 顶端右侧下拉按钮 -->
-              <div class="btn-group" style="margin-top:13px;margin-right:10px;">
+                <div class="btn-group" style="margin-top:13px;margin-right:10px;">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="glyphicon glyphicon-user" style="margin-right:10px;"></span>
                         <?php echo $_SESSION['user']['user'];?>管理员
-                        <span style="" class="caret"></span>
+                        <span  class="caret"></span>
                     </button>
 
                     <!-- top 使用顶层窗口打开 -->
                     <ul class="dropdown-menu" style="left:-20px;">
                         <li><a href="login/action.php?a=logout" target="top">注销</a></li>
-                        
                     </ul>
                 </div>
             </div>
@@ -104,13 +103,9 @@
         </div>
                
 
-                <div class="col-md-10"  style="height:700px;">
-                    <!-- 嵌套框架集 -->
-                    <iframe src="./public/welcome.html" name="main" frameborder="0" style="width:100%;height:100%;"></iframe>
-                </div>
-
-            </div><!-- row end -->
+        <div class="col-md-10"  style="height:700px;">
+            <!-- 嵌套框架集 -->
+            <iframe src="./public/welcome.html" name="main" frameborder="0" style="width:100%;height:100%;"></iframe>
         </div>
-    
     </body>
 </html>

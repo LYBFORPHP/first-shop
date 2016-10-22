@@ -33,6 +33,7 @@
                 height:475px;
             }
         </style>
+    </head>    
     <body>
 
 
@@ -53,13 +54,9 @@
                     <?php  endif; ?>
                         <li><a href="#">我的订单</a></li>
                         <li><a href="#">收藏本站</a></li>
-
                     </ul>
                 </div>
-               
-                    
-
-                
+   
                 <div class="top-head-right">
                     <ul class="nav nav-pills">
                         <li><a href="./main_index.php">返回首页</a></li>
@@ -140,75 +137,75 @@
             </ul>
 
             <div class="cate-nav">
-                <?php
-                            // 1.查找出所有顶级分类
-                            $sql = "select * from shop_category where `pid` = 0";
-                            // 2.执行
-                            $result = mysqli_query($link,$sql);
+            <?php
+                        // 1.查找出所有顶级分类
+                        $sql = "select * from shop_category where `pid` = 0";
+                        // 2.执行
+                        $result = mysqli_query($link,$sql);
 
-                            $topCate = [];
-                            // 3.判断
-                                if(mysqli_affected_rows($link) > 0){
+                        $topCate = [];
+                        // 3.判断
+                            if(mysqli_affected_rows($link) > 0){
+                            while($row = mysqli_fetch_assoc($result)){
+                                $topCate[] = $row;
+                            }
+                            // 释放资源
+                            mysqli_free_result($result);
+                        }   
+            ?>
+                <ul class="cate-nav-ul nav nav-stacked" >
+                <?php foreach($topCate as $key => $val): ?>
+                    <li class="cate-nav-li">
+                        <a class="cate-link" style="background-color:#E5E6E6;"><?= $val['name']; ?></a>
+
+                        <div class="cate-hidden-two">
+                        <?php
+                            // 查找出二级分类
+                            $sql = "select * from shop_category where `pid` = {$val['id']}";
+                            // 执行
+                            $result = mysqli_query($link,$sql);
+                            $secondCate = [];
+                            if(mysqli_affected_rows($link) > 0){
                                 while($row = mysqli_fetch_assoc($result)){
-                                    $topCate[] = $row;
+                                    $secondCate[] = $row;
                                 }
                                 // 释放资源
                                 mysqli_free_result($result);
-                            }   
-                ?>
-                <ul class="cate-nav-ul nav nav-stacked" >
-                    <?php foreach($topCate as $key => $val): ?>
-                        <li class="cate-nav-li">
-                            <a class="cate-link" style="background-color:#E5E6E6;"><?= $val['name']; ?></a>
-
-                            <div class="cate-hidden-two">
-                                <?php
-                                    // 查找出二级分类
-                                    $sql = "select * from shop_category where `pid` = {$val['id']}";
-                                    // 执行
-                                    $result = mysqli_query($link,$sql);
-                                    $secondCate = [];
-                                    if(mysqli_affected_rows($link) > 0){
-                                        while($row = mysqli_fetch_assoc($result)){
-                                            $secondCate[] = $row;
-                                        }
-                                        // 释放资源
-                                        mysqli_free_result($result);
+                            }
+                        ?>
+                        <?php foreach($secondCate as $k2 => $v2 ):?>
+                                <p class="cate-p"><?= $v2['name'];?></p>
+                            <?php 
+                                $sql = "select * from shop_category where `pid` = {$v2['id']}";
+                                // 执行
+                                $result = mysqli_query($link,$sql);
+                                $thirdCate = [];
+                                if(mysqli_affected_rows($link) > 0){
+                                    while($row = mysqli_fetch_assoc($result)){
+                                        $thirdCate[] = $row;
                                     }
-                                ?>
-                            <?php foreach($secondCate as $k2 => $v2 ):?>
-                                    <p class="cate-p"><?= $v2['name'];?></p>
-                                <?php 
-                                    $sql = "select * from shop_category where `pid` = {$v2['id']}";
-                                    // 执行
-                                    $result = mysqli_query($link,$sql);
-                                    $thirdCate = [];
-                                    if(mysqli_affected_rows($link) > 0){
-                                        while($row = mysqli_fetch_assoc($result)){
-                                            $thirdCate[] = $row;
-                                        }
-                                    // 释放资源
-                                    mysqli_free_result($result);
-                                    }   
+                                // 释放资源
+                                mysqli_free_result($result);
+                                }   
 
-                                ?>
-                                <?php foreach($thirdCate as $k3 => $v3 ):?>
-                                    <div class="cate-hidden-three">
+                            ?>
+                            <?php foreach($thirdCate as $k3 => $v3 ):?>
+                                <div class="cate-hidden-three">
 
-                                        <a href="./showgoods.php?cid=<?= $v3['id'];?>"><?= $v3['name'];?></a>
+                                    <a href="./showgoods.php?cid=<?= $v3['id'];?>"><?= $v3['name'];?></a>
 
-                                    </div>
-                                <?php endforeach; ?>
-                               
+                                </div>
                             <?php endforeach; ?>
+                                       
+                        <?php endforeach; ?>
 
 
-                            </div>
+                        </div>
 
 
 
-                        </li>
-                    <?php endforeach; ?>
+                    </li>
+                <?php endforeach; ?>
                 </ul>
             </div>
 
@@ -217,161 +214,157 @@
            
              <!--                        中部大广告                                    -->
             <div class="main-foucs" >
-<?php
-            $gid = $_GET['gid'] + 0 ;
+            <?php
+                $gid = $_GET['gid'] + 0 ;          
+                if($gid<1){
+                    header('location:./index.php');
+                    exit;
+                }   
 
-                
-
-            if($gid<1){
-                header('location:./index.php');
-                exit;
-            }   
-
-
-
-
-        $sql = "select * from `shop_goods` where `id` = {$gid}";
+                $sql = "select * from `shop_goods` where `id` = {$gid}";
     
-        // 执行
-        $result = mysqli_query($link , $sql);
+                // 执行
+                $result = mysqli_query($link , $sql);
 
-        $goodsInfo = [];
+                $goodsInfo = [];
 
-        // 判断
-        if(mysqli_affected_rows($link) > 0){
-            while($row = mysqli_fetch_assoc($result)){
-                $goodsInfo = $row;
-        }
-       
-        //  exit;
-        // 释放资源
-        mysqli_free_result($result);
-        }
-    
-        $sql = "select * from `shop_category` where `id` = {$goodsInfo['cateid']}";
-
-        $result = mysqli_query($link , $sql);
-
-        if(mysqli_errno($link) > 0){
-            $errno = mysqli_errno($link);
-            $error = mysqli_error($link);
-            echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
-            exit;
-        }
-        $categoryList = [];
-        // 判断
-        if(mysqli_affected_rows($link) > 0){
-        $categoryList = mysqli_fetch_assoc($result);
-           
-        }
-       
-        $catePath= [] ;
-        $catePath=explode(',',$categoryList['path']);
-       
-
-        $sql = "select * from `shop_category` where `id` = {$catePath[2]}";
-
-        $result = mysqli_query($link , $sql);
-
-        if(mysqli_errno($link) > 0){
-            $errno = mysqli_errno($link);
-            $error = mysqli_error($link);
-            echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
-            header('refresh:3;url=./main_index.php?errno={$errno}');
-            exit;
-        }
-         
-        if(mysqli_affected_rows($link) > 0){
-            $secondId = mysqli_fetch_assoc($result);
-           
-         }
-        $sql = "select * from `shop_category` where `id` = {$catePath[1]}";
-        $result = mysqli_query($link , $sql);
-        
-        if(mysqli_errno($link) > 0){
-            $errno = mysqli_errno($link);
-            $error = mysqli_error($link);
-            echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
-            header('refresh:3;url=./main_index.php?errno={$errno}');
-            exit;
-        }
-         
-        if(mysqli_affected_rows($link) > 0){
-            $thirdId = mysqli_fetch_assoc($result);
-        }
-
-                //设置默认数量
-                $num = isset($_GET['num'])?$_GET['num'] + 0:1;
-                $num = max(1,$num);
-                $num = min($num,$goodsInfo['store']);
-       
-?>
-
-
-        <ol class="breadcrumb" style="width:930px; margin:0 auto;">
-            <li class="bread"><b><?= $thirdId['name'] ?></b></li>
-            <li class="bread"><b><?= $secondId['name'] ?></b></li>
-            <li class="bread"><b><?=$categoryList['name'];?></b></li>     
-        </ol> 
-        <div class="detail-pic">
-            <img  src="../Common/goodsimage/m_<?= $goodsInfo['picture'];?>"/>
-        </div>      
-        <div class="detail-shopcar">
-            <form class="form-horizontal" role="form">
-            <div class="form-group">
-            <h2><?= $goodsInfo['name'] ?></h2>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-10">
-                    <h1>售价：￥<?= $goodsInfo['price'] ?></h1>
-                </div>
-            </div>
-            <div class="form-group">
+                // 判断
+                if(mysqli_affected_rows($link) > 0){
+                    while($row = mysqli_fetch_assoc($result)){
+                        $goodsInfo = $row;
+                }
+               
+                //  exit;
+                // 释放资源
+                mysqli_free_result($result);
+                }
             
-                <div style="height:40px;width:550px; margin-left:15px;">
-                    <span>浏览量 : <?= $goodsInfo['views'] ?></span>
+                $sql = "select * from `shop_category` where `id` = {$goodsInfo['cateid']}";
+
+                $result = mysqli_query($link , $sql);
+
+                if(mysqli_errno($link) > 0){
+                    $errno = mysqli_errno($link);
+                    $error = mysqli_error($link);
+                    echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
+                    exit;
+                }
+                $categoryList = [];
+                // 判断
+                if(mysqli_affected_rows($link) > 0){
+                $categoryList = mysqli_fetch_assoc($result);
+                   
+                }
+               
+                $catePath= [] ;
+                $catePath=explode(',',$categoryList['path']);
+               
+
+                $sql = "select * from `shop_category` where `id` = {$catePath[2]}";
+
+                $result = mysqli_query($link , $sql);
+
+                if(mysqli_errno($link) > 0){
+                    $errno = mysqli_errno($link);
+                    $error = mysqli_error($link);
+                    echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
+                    header('refresh:3;url=./main_index.php?errno={$errno}');
+                    exit;
+                }
+                 
+                if(mysqli_affected_rows($link) > 0){
+                    $secondId = mysqli_fetch_assoc($result);
+                   
+                 }
+                $sql = "select * from `shop_category` where `id` = {$catePath[1]}";
+                $result = mysqli_query($link , $sql);
+                
+                if(mysqli_errno($link) > 0){
+                    $errno = mysqli_errno($link);
+                    $error = mysqli_error($link);
+                    echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
+                    header('refresh:3;url=./main_index.php?errno={$errno}');
+                    exit;
+                }
+                 
+                if(mysqli_affected_rows($link) > 0){
+                    $thirdId = mysqli_fetch_assoc($result);
+                }
+
+                        //设置默认数量
+                        $num = isset($_GET['num'])?$_GET['num'] + 0:1;
+                        $num = max(1,$num);
+                        $num = min($num,$goodsInfo['store']);
+               
+            ?>
+
+
+                <ol class="breadcrumb" style="width:930px; margin:0 auto;">
+                    <li class="bread"><b><?= $thirdId['name'] ?></b></li>
+                    <li class="bread"><b><?= $secondId['name'] ?></b></li>
+                    <li class="bread"><b><?=$categoryList['name'];?></b></li>     
+                </ol> 
+                <div class="detail-pic">
+                    <img  src="../Common/goodsimage/m_<?= $goodsInfo['picture'];?>"/>
+                </div>      
+                <div class="detail-shopcar">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <h2><?= $goodsInfo['name'] ?></h2>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <h1>售价：￥<?= $goodsInfo['price'] ?></h1>
+                            </div>
+                        </div>
+
+                        <div class="form-group">            
+                            <div style="height:40px;width:550px; margin-left:15px;">
+                                <span>浏览量 : <?= $goodsInfo['views'] ?></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                       
+                            <div style="height:40px;width:550px; margin-left:15px;">
+                                <span>库存 : <?= $goodsInfo['store'] ?></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div style="height:40px;width:550px; margin-left:15px;">
+                                <span>销量 : <?= $goodsInfo['sale'] ?></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div style="height:40px;width:550px; margin-left:15px;">
+                                <span>数量：</span>
+                                <span >
+                                    <a href="./detail.php?gid=<?= $goodsInfo['id'];?>&num=<?= $num -1?>" class="glyphicon glyphicon-minus control-label"></a>
+                                    <input type="text" readonly style="width:30px;" name="num" value="<?= $num; ?>">
+                                  
+                                    <a href="./detail.php?gid=<?= $goodsInfo['id'];?>&num=<?= $num + 1;?>" class="glyphicon glyphicon-plus control-label"></a>
+                                </span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- 如果库存小于0，则显示已售完 -->
+                            <?php if( $goodsInfo['store'] < 1):?>
+                                    <div class="col-sm-offset-2 col-sm-10"><a  class="btn disabled btn-default ">商品已售完</a></div>
+                            <?php else:?>
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <a href="./web_action.php?a=addshopcar&num=<?= $num;?>&gid=<?= $goodsInfo['id']?>" class="btn btn-default" style="background:#B81C22;color:white;">加入购物车</a>
+                            </div>
+                            <?php endif;?>
+                        </div>
+
+                    </form>
                 </div>
-            </div>
-            <div class="form-group">
-           
-                <div style="height:40px;width:550px; margin-left:15px;">
-                    <span>库存 : <?= $goodsInfo['store'] ?></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div style="height:40px;width:550px; margin-left:15px;">
-                    <span>销量 : <?= $goodsInfo['sale'] ?></span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div style="height:40px;width:550px; margin-left:15px;">
-                    <span>数量：</span>
-                    <span >
-                        <a href="./detail.php?gid=<?= $goodsInfo['id'];?>&num=<?= $num -1?>" class="glyphicon glyphicon-minus control-label"></a>
-
-
-                        <input type="text" readonly style="width:30px;" name="num" value="<?= $num; ?>">
-                      
-                        <a href="./detail.php?gid=<?= $goodsInfo['id'];?>&num=<?= $num + 1;?>" class="glyphicon glyphicon-plus control-label"></a>
-                    </span>
 
             </div>
-            </div>
-            <div class="form-group">
-            <!-- 如果库存小于0，则显示已售完 -->
-            <?php if( $goodsInfo['store'] < 1):?>
-                    <div class="col-sm-offset-2 col-sm-10"><a  class="btn disabled btn-default ">商品已售完</a></div>
-                <?php else:?>
-            <div class="col-sm-offset-2 col-sm-10">
-            <a href="./web_action.php?a=addshopcar&num=<?= $num;?>&gid=<?= $goodsInfo['id']?>" class="btn btn-default" style="background:#B81C22;color:white;">加入购物车</a>
-            </div>
-            <?php endif;?>
-            </div>
-
-            </form>
-        </div>
-
-        </div>
         </div>
 
 <?php include './footer_index.php'?>

@@ -6,7 +6,6 @@
     if(isset($_GET['id'])){
         // 接收ID
         $id = $_GET['id'];
-        echo '我从添加子分类进入的，我要添加子分类！';
         // 导入配置文件
         require '../../Common/config.php';
         // 1.连接
@@ -39,7 +38,7 @@
 
 
     }else{
-        echo '我从菜单进入的，我要添加顶级分类！';
+        
         // 父类ID
         $pid = 0;
         // 路径
@@ -79,9 +78,8 @@
                     </form>
 
                 </div>
-                <div class="col-md-2"></div>
+               
             </div>
         </div>
-
     </body>
 </html>

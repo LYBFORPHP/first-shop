@@ -1,17 +1,5 @@
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     <div class="clear"></div>
         <div class="foot">
             <div class="foot-info">
