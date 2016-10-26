@@ -15,7 +15,7 @@
 
         // 3.准备SQL
         $sql = "select * from `".PIX."category` where `id` = {$id}";
-        echo $sql;
+        
         // 4.发送
         $result = mysqli_query($link , $sql);
 
@@ -28,9 +28,7 @@
         // 6.关闭
         mysqli_close($link);
 
-        echo '<pre>';
-            print_r($parentCate);
-        echo '</pre>';
+       
         // 父类ID
         $pid = $parentCate['id'];
         // 路径

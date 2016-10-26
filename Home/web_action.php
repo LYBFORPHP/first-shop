@@ -1,8 +1,9 @@
 <?php
-    session_start();
     
 
     require '../Common/config.php';
+    session_start();
+   
     ob_start();
 
 
@@ -12,9 +13,11 @@
 
 //               注册新用户            //
         case 'registe':
-            echo '执行注册';
-            if($_POST['check']=='-1'){
+       
+            
+            if(!isset($_POST['check'])){
                 echo '请阅读《vancl凡客诚品服务条款》';
+                header('refresh:3;url=./login/web_register.php?error=3');
                 exit;
             }
             $user = $_POST['userName'];
@@ -72,19 +75,19 @@
                         $msg .= "<p>5秒后滚！</p>";
                         echo $msg;
                         echo $sql;
-                       // header('refresh:5;url=./index.php?error=2');
+                        header('refresh:5;url=./index.php?error=2');
                         exit;
                     }
                     $userlist = []; // 接收遍历的结果集
 
-            echo '受影响行：' . mysqli_affected_rows($link);
+           
             if(mysqli_affected_rows($link) > 0){
                 while($row = mysqli_fetch_assoc($result)){
                     $userlist= $row;
 
                     if($userlist['user']===$user){
                         echo '该帐号名已被注册!请重新输入！';
-                        header('refresh:5;url=./main_index.php?error=2');
+                        header('refresh:5;url=./login/web_register.php?error=2');
                         exit;
                     }
                 }
@@ -93,7 +96,7 @@
 
             // 3.准备SQL
             $sql = "insert into `".PIX."user`(`user`,`pass`,`addtime`) values('{$user}','{$pass}',unix_timestamp())";
-            echo $sql;
+            
             // 4.执行
             $result = mysqli_query($link , $sql);
             // 5.检测错误
@@ -104,17 +107,21 @@
                         $msg .= "<p>5秒后滚！</p>";
                         echo $msg;
                         echo $sql;
-                      header('refresh:5;url=./login/main_index.php?error=2');
+                      header('refresh:5;url=./login/web_register.php?error=2');
                         exit;
                     }
             //处理
             // 受影响行 大于 0
             if(mysqli_affected_rows($link) > 0){
-               
+                $userid=mysqli_insert_id($link);  
 
-            echo '注册成功！！';
-            echo "<b style='color:green;font-size:1cm;'>最后插入ID：" . mysqli_insert_id($link) . '</b>';
-            header('refresh:5;url=./login/main_index.php?s=ok');
+                    echo '<div style="width:300px;text-align:center;margin:100px auto;">';
+                    echo '<b class="text-center" style="color:green;">注册成功！</b>';
+                    echo '</div>';
+                $_SESSION['home_userinfo']['user']=$user;
+                $_SESSION['home_userinfo']['id'] = $userid;
+          
+                header('refresh:5;url=./main_index.php');
             }
         break;
 
@@ -123,12 +130,27 @@
 
 //               登录区间                     //
         case 'login':
-            echo '执行登录';
+
+           
 
             $user_name=$_POST['user_name'];
             $user_pass=$_POST['user_pass'];
             $code=$_POST['yzm'];
 
+
+            //正则判断
+            $preg='/^[a-zA-Z][a-zA-Z0-9_]{1,}$/';
+            if(!preg_match($preg,$user_name)){
+                echo '<font color="red">帐号错误</font>';
+               
+                header('refresh:3;url=./login/web_register.php?error=3');
+                exit;
+            }
+            if($user_pass==''){
+                echo '密码不能为空！';
+                header('refresh:3;url=./login/web_register.php?error=3');
+                exit;
+            }
             //判断验证码
             $yzm=$_SESSION['code'];
             if(strtolower($code) != strtolower($yzm)){
@@ -157,49 +179,51 @@
                 $msg = "<p style='color:red;font-size:1cm;'><b>Error {$errno}:{$error}</b></p>";
                 $msg .= "<p>5秒后滚！</p>";
                 echo $msg;
-                echo $sql;
+            
                header('refresh:5;url=./login/main_index.php?error=2');
                
             }
             $userinfo = []; // 接收遍历的结果集
 
-            echo '受影响行：' . mysqli_affected_rows($link);
+           
             if(mysqli_affected_rows($link) > 0){
                 $userinfo = mysqli_fetch_assoc($result);
                     
                 if($userinfo['pass'] === md5($user_pass)){
 
                     $_SESSION['home_userinfo'] = $userinfo;
-                    echo '结果：';
                     
-                    echo '<b style="color:green;">登录成功！</b>';
-                    echo $_SESSION['REFERER'];
-
+                    echo '<div style="width:300px;text-align:center;margin:100px auto;">';
+                    echo '<b class="text-center" style="color:green;">正在登录！</b>';
+                    echo '</div>';
                     header('refresh:3;url='.$_SESSION['REFERER']);
                     exit;
-                    }else{
+                }else{
                     echo '密码错误！！！！！';
                     header('refresh:3;url=./login/web_login.php?error=2');
                     exit;
-                    }
-                   
-                }else{
-                    echo '用户名不存在！';
-                    header('refresh:3;url=./login/web_login.php?s=4');
-                    exit;
                 }
+                   
+            }else{
+                echo '用户名不存在！';
+                header('refresh:3;url=./login/web_login.php?error=4');
+                  exit;
+            }
+            
         break;
                 
             
-    //               登录区间                      //
+    //               登录区间结束                      //
 
 
 
     //              注销区间                     //
         case 'logout':
-            echo '退出。。';
+            echo '<div style="width:300px;text-align:center;margin:100px auto;">';
+                    echo '<b class="text-center" style="color:green;">正在退出</b>';
+                    echo '</div>';
             session_destroy();
-            header('location:./web_login.php');
+            header('location:./main_index.php');
         break;
 
     //        注销结束                 //
@@ -324,7 +348,7 @@
             //     付款                                   //
         case 'pay':
             
-            echo '已提交';
+            
             //  接收订单数据
             $linkman=$_POST['linkman'] ;
             $phone = $_POST['phone'];
@@ -335,6 +359,27 @@
             $status = 0;
             //默认状态是新订单
               
+            //正则
+            $preg='/^[\x{4e00}-\x{9fa5}0-9a-zA-Z][\x{4e00}-\x{9fa5}\w]*$/u';
+                if(!preg_match($preg,$linkman)){
+                    echo '<font color="red">姓名格式错误</font>';
+                    //回到注册页
+                    //3秒后跳转
+                    header('refresh:3;url=./shopcar/cart2.php?error=2');
+                    exit;
+                }
+            $preg='/^[1][358][0-9]{9}$/';
+                if(!preg_match($preg,$phone)){
+                    echo '<div style="width:300px;text-align:center;margin:100px auto;">';
+                    echo '<font color="red">手机号码格式错误</font>';
+                    echo '</div>';
+                    //回到注册页
+                    //3秒后跳转
+                   header('refresh:3;url=./shopcar/cart2.php?error=2');
+                    exit;
+                }
+
+
             
             //连接数据库 
             $link = mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误信息：' . mysqli_connect_error());
@@ -353,11 +398,11 @@
             }
             //处理
             if(mysqli_affected_rows($link)){
-                echo '添加成功！';
+                
 
                 //得到订单ID
                 $orderid=mysqli_insert_id($link);
-                echo $orderid;
+                
            
               }
 
@@ -381,8 +426,8 @@
                 }
             //处理
                 if(mysqli_affected_rows($link)){
-                    echo '添加成功！';
-                    header("refresh:3;url=./shopcar/cart3.php?orderid=$orderid");
+                    
+                    header("refresh:1;url=./shopcar/cart3.php?orderid=$orderid");
                 }
             }
            

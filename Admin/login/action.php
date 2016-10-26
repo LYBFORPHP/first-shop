@@ -11,7 +11,7 @@
     $a = $_GET['a'];
     switch($a){
         case 'login':
-            echo '执行登录！';
+            
 
 
     //接收用户传输的信息 
@@ -116,7 +116,7 @@
 
 //                   执行退出                                        //
     case 'logout':
-            echo '退出。。';
+           
             session_destroy();
             header('location:./login.php');
     break;
@@ -176,7 +176,7 @@
        
         // 3.准备SQL语句
         $sql = "update `shop_user` set `integral`=$integral, `level`=$level where `id`=$id ";
-        echo $sql;
+       
 
         $result = mysqli_query($link , $sql);
 
@@ -189,7 +189,9 @@
             exit;
         }
        
-        echo '受影响行：' . mysqli_affected_rows($link);
+        if(mysqli_affected_rows($link)>0){
+            echo '修改成功！';
+        }
         
 
         mysqli_close($link);
@@ -222,7 +224,7 @@
         }
         $userlist = []; // 接收遍历的结果集
 
-        echo '受影响行：' . mysqli_affected_rows($link);
+        
         if(mysqli_affected_rows($link) > 0){
             while($row = mysqli_fetch_assoc($result)){
                 $userlist= $row;
@@ -230,7 +232,6 @@
         }
         
         
-         
         if($_SESSION['user']['level']>=$userlist['level']){
             echo '无权删除';
             header('refresh:3;url=../user/showuser.php');
@@ -239,9 +240,18 @@
         $sql="delete from `shop_user` where id={$id}";
        
         $result=mysqli_query($link,$sql);
-
+        if(mysqli_errno($link) > 0){
+            $errno = mysqli_errno($link);
+            $error = mysqli_error($link);
+            echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
+            exit;
+        }
+        if(mysqli_affected_rows($link)>0){
+            echo '删除成功！';
+        }
         mysqli_close($link);
         header('refresh:2;url=../user/showuser.php');
+
 
         break;
 

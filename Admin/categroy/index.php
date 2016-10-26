@@ -19,7 +19,7 @@
     $total = mysqli_query($link,$sql);
    
     $total = mysqli_fetch_assoc($total)['total'];
-    echo '总条数: '. $total .'<br>';
+    
     $totalPage = ceil($total / $num);
     $p = isset($_GET['p'])?$_GET['p']:1;
     // 如果当前页小于1，则重新设置为最小页码
@@ -29,7 +29,7 @@
     if($p > $totalPage){
         $p = $totalPage;
     }
-    echo '当前页码数：'. $p . '<br>';
+    
 
     //偏移量
     
@@ -40,7 +40,7 @@
 
     $userlist = []; // 接收遍历的结果集
 
-    echo '受影响行：' . mysqli_affected_rows($link);
+    
     if(mysqli_affected_rows($link) > 0){
         while($row = mysqli_fetch_assoc($result)){
             $userlist[] = $row;
@@ -60,7 +60,7 @@
         $offset = ($p - 1)*$num;
     if($total>0){
         $sql = "select * from `".PIX."category` order by concat(`path`,`id`) limit {$offset},{$num}";
-        echo $sql;
+        
         }
         $result = mysqli_query($link , $sql);
         if(mysqli_errno($link) > 0){
@@ -72,7 +72,7 @@
     // 6.处理
     $category = []; // 接收遍历的结果集
 
-    echo '受影响行：' . mysqli_affected_rows($link);
+    
     if(mysqli_affected_rows($link) > 0){
         while($row = mysqli_fetch_assoc($result)){
             $category[] = $row;

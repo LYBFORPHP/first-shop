@@ -1,7 +1,7 @@
 <?php
     require './head_user.php';
 
-
+   
 ?>  
     <ol class="breadcrumb" style="margin-top:">
         <b>您当前的位置：</b>
@@ -32,7 +32,7 @@
 
     //检测错误
     if(mysqli_errno($link)>0){
-        $erron = mysqli_errno($link);
+        $errno = mysqli_errno($link);
         $error = mysqli_error($link);
         echo "<p><b style='font-size:1cm;color:red;'>Error:{$sql},错误号：{$errno},错误信息:{$error}</b></p>";
         header('refresh:3;url=../main_index.php');
@@ -54,7 +54,7 @@
 
 
     <?php if($userinfo['icon']!='defaulticon.jpg'):?>
-            <img style="width:50px;" src="./usericon/<?php echo $userinfo['icon'];?>">
+            <img style="width:50px;" class="img-rounded" src="./usericon/<?php echo $userinfo['icon'];?>">
             <input type="hidden" name="icon" value="<?php echo $userinfo['icon'];?>">
     <?php else: ?>
             <img style="width:50px;" src="./defaulticon.jpg?" class="img-circle">
@@ -64,7 +64,12 @@
                 
    
             $userSex=['女','男','保密'];
-            $age = date('Y-m-d',$userinfo['age']);
+            if($userinfo['age']==0){
+                $age = 0;
+            }else{
+                $age = date('Y-m-d',$userinfo['age']);
+            }
+            
             ?>
                     
               
@@ -139,9 +144,9 @@
     $totally=0;
     $status=['新订单','已发货','已收货','无效订单'];
      //  SQL语句
-    $sql = "select count(*) total from `shop_orders`";
+    $sql = "select count(*) total from `shop_orders` where `uid`={$userid}";
     //发送执行
-      
+    
     $result = mysqli_query($link , $sql);
   
     //判断
@@ -170,12 +175,18 @@
     //求偏移量
     $offset = ($p - 1) * $num;
     
-   
+    //连接
+    $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误信息：'.mysqli_connect_error());
+
+    //设置字符集
+    mysqli_set_charset($link , 'utf8');
+    //获取用户ID
 
     //遍历订单，进行分页
-   $sql = "select * from `".PIX."orders` order by `id` desc limit {$offset},{$num}";
+    $sql = "select * from `".PIX."orders`  where `uid`={$userid}  order by `id` desc limit {$offset},{$num}";
    
     $result = mysqli_query($link,$sql);
+    
     
     // 检测错误
     if(mysqli_errno($link) > 0){
@@ -186,21 +197,17 @@
         exit;
     }
     $ordersList=[];
-    if(mysqli_affected_rows($link)){
+    
+    if(mysqli_affected_rows($link)>0){
         while($row = mysqli_fetch_assoc($result)){
             $orderList[]=$row;
-        }
-    }
-
-    mysqli_free_result($result);
-   
+            
+    
     ?>
     <?php foreach($orderList as $key => $val): 
         $time = date('Y-m-d H:i:s',$val['addtime']);
+        
     ?>
-
-          
-    
                     <tr>
                         <td><?php echo $val['id'] ?></td>
                         <td><?php echo $val['uid'] ?></td>
@@ -208,10 +215,16 @@
                         <td><?php echo $val['address'] ?></td>
                         <td>￥ <?php echo $val['total']; ?></td>
                         <td><?php echo $time ?></td>
-                        <td><?php echo $status[$val['status']] ?></td>
+                        <td><?php echo $status[$val['status']]; ?>
+                        <a class="btn btn-primary" href="user_action.php?a=status&id=<?php echo $val['id'];?>">确认收货</a></td>
                         <td><a href="./user_ordersdetail.php?id=<?=$val['id'];?>">查看</a></td>
                     </tr>
-    <?php endforeach; ?>
+    <?php endforeach; 
+         }
+    }
+    mysqli_free_result($result);
+    mysqli_close($link);
+    ?>
       
                 </tbody>
 

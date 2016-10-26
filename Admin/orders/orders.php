@@ -78,6 +78,7 @@
                         <td>总金额</td>
                         <td>添加时间</td>
                         <td>订单状态</td>
+                        <td>查看</td>
                         <td>操作</td>
                     </tr>
                 </thead>
@@ -102,14 +103,14 @@
     $ordersList=[];
     if(mysqli_affected_rows($link)){
         while($row = mysqli_fetch_assoc($result)){
-            $orderList[]=$row;
+            $ordersList[]=$row;
         }
     }
 
     mysqli_free_result($result);
    
 ?>
-    <?php foreach($orderList as $key => $val): ?>
+    <?php foreach($ordersList as $key => $val): ?>
 
                     <tr>
                         <td><?php echo $val['id'] ?></td>
@@ -119,6 +120,7 @@
                         <td>￥ <?php echo $val['total']; ?></td>
                         <td><?php echo $val['addtime'] ?></td>
                         <td><?php echo $status[$val['status']] ?></td>
+                        <td><a href="./detailList.php?orderid=<?=$val['id']?>">查看</a></td>
                         <td><a href="orders_update.php?a=update&id=<?=$val['id'] ?>" class="btn btn-warning">修改</a></td>
                     </tr>
     <?php endforeach; ?>

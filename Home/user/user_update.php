@@ -1,6 +1,8 @@
 <?php
-  
+
+    
     require './head_user.php';
+   
     $userid=$_SESSION['home_userinfo']['id'];
    
     //连接
@@ -15,7 +17,7 @@
 
     //检测错误
     if(mysqli_errno($link)>0){
-        $erron = mysqli_errno($link);
+        $errno= mysqli_errno($link);
         $error = mysqli_error($link);
         echo "<p><b style='font-size:1cm;color:red;'>Error:{$sql},错误号：{$errno},错误信息:{$error}</b></p>";
         header('refresh:3;url=../main_index.php');
@@ -52,7 +54,7 @@
 
                 <?php if($userinfo['icon']!='defaulticon.jpg'):?>
 
-                        <img style="width:50px;" src="./usericon/<?php echo $userinfo['icon'];?>">
+                        <img style="width:50px;" class="img-rounded" src="./usericon/<?php echo $userinfo['icon'];?>">
                         <input type="hidden" name="icon" value="<?php echo $userinfo['icon'];?>">
 
                 <?php else: ?>

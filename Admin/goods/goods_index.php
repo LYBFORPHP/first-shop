@@ -67,7 +67,7 @@
         break;
         case 'price':
         
-            echo '你要搜索:'.$search;
+           
             if($contentStart==''&&$contentEnd!=''){
                 $where = "where `price` < {$contentEnd}";
             }elseif($contentStart!=''&&$contentEnd==''){
@@ -78,7 +78,7 @@
             
         break;
         case 'sale':
-             echo '你要搜索:'.$search;
+            
             if($contentStart==''&&$contentEnd!=''){
                 $where = "where `sale` < {$contentEnd}";
             }elseif($contentStart!=''&&$contentEnd==''){
@@ -88,7 +88,7 @@
             }
         break;
         case 'store':
-             echo '你要搜索:'.$search;
+            
             if($contentStart==''&&$contentEnd!=''){
                 $where = "where `store` < {$contentEnd}";
             }elseif($contentStart!=''&&$contentEnd==''){
@@ -98,7 +98,7 @@
             }
         break;
         case 'views':
-             echo '你要搜索:'.$search;
+            
             if($contentStart==''&&$contentEnd!=''){
                 $where = "where `views` < {$contentEnd}";
             }elseif($contentStart!=''&&$contentEnd==''){

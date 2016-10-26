@@ -91,14 +91,14 @@
                 <a class="list-group-item active"><i style="margin-right:10px;" class="glyphicon glyphicon-th-list"></i>订单管理</a>
 
                 <a href="../Admin/orders/orders.php" target="main" class="list-group-item"><i style="margin-left:5px;margin-right:10px;" class="glyphicon glyphicon-chevron-right"></i>订单浏览</a>
-                <a href="../Admin/orders/detailList.php" target="main" class="list-group-item"><i style="margin-left:5px;margin-right:10px;" class="glyphicon glyphicon-chevron-right"></i>订单详情</a>
+                
             </div>
             <div class="list-group" style="margin-top:5px;">
                 <a class="list-group-item active"><i style="margin-right:10px;" class="glyphicon glyphicon-th-list"></i>其他管理</a>
 
                 <a href="..//Admin/friends/friendslink_index.php" target="main" class="list-group-item"><i style="margin-left:5px;margin-right:10px;" class="glyphicon glyphicon-chevron-right"></i>友情链接</a>
                 <a href="..//Admin/friends/friendslink_add.php" target="main" class="list-group-item"><i style="margin-left:5px;margin-right:10px;" class="glyphicon glyphicon-chevron-right"></i>新增链接</a>
-                <a href="../Admin/friends/addLink.php" target="main" class="list-group-item"><i style="margin-left:5px;margin-right:10px;" class="glyphicon glyphicon-chevron-right"></i>留言评论</a>
+                <a href="../Admin/message/message_index.php" target="main" class="list-group-item"><i style="margin-left:5px;margin-right:10px;" class="glyphicon glyphicon-chevron-right"></i>留言评论</a>
             </div>
         </div>
                

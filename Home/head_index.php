@@ -2,7 +2,7 @@
     session_start();
     // 先导入配置文件
     require '../Common/config.php';
-
+   
     // 1.连接数据库
     $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());;
 
@@ -46,9 +46,9 @@
                     <li><a href="./web_action.php?a=logout">注销</a></li>
                 <?php else: ?>
                     <li><a href="./login/web_login.php?a=login">登录</a></li>
-                    <li><a href="./login/register.php">注册</a></li>
+                    <li><a href="./login/web_register.php">注册</a></li>
                 <?php  endif; ?>
-                    <li><a href="#">我的订单</a></li>
+                    <li><a href="./user/user.php">我的订单</a></li>
                     <li><a href="#">收藏本站</a></li>
                     </ul>
                 </div>
@@ -61,10 +61,10 @@
                     <li><a href="./main_index.php">返回首页</a></li>
 
                         <li class="nav-hide">
-                        <a href="#">我的凡客</a>
+                        <a href="./user/user.php">我的凡客</a>
                         <div class="hidebox"> 
                         <a href="./user/user.php">个人中心</a>
-                        <a href="#">我的订单</a>
+                        <a href="./user/user.php">我的订单</a>
                         </div>
                         </li>
                         <li><a href="#">帮助中心</a></li>

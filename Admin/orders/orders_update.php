@@ -33,6 +33,7 @@
         if(mysqli_affected_rows($link) > 0){
             $ordersinfo = mysqli_fetch_assoc($result);
         }
+      
 ?>
     
 <!DOCTYPE html>
@@ -54,9 +55,9 @@
                     <label for="inputEmail3" class="col-sm-2 control-label">修改订单状态</label>
                     <div class="col-sm-5">
                     <select name="status" class="form-control ">
-                    <option value="0">新订单</option>
+                    <option value="0" disabled>新订单</option>
                     <option value="1">已发货</option>
-                    <option value="2">已收货</option>
+                    <option value="2" disabled>已收货</option>
                     <option value="3">无效订单</option>
                     </select>
                     </div>

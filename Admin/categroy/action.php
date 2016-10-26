@@ -41,8 +41,7 @@
             // 3.准备SQL
             $sql = "insert into `".PIX."category`(`pid`,`name`,`path`) values({$pid},'{$catename}','{$path}')";
             // 先检查SQL语句是否有误
-            echo $sql;
-
+            
             // 4.发送
             $result = mysqli_query($link , $sql);
 
@@ -76,10 +75,8 @@
 
                                   
         case 'del':
-            echo '删除分类。。。';
-            echo '<pre>';
-                print_r($_GET);
-            echo '</pre>';
+            
+            
             // 1.接收要删除的ID
             $id = $_GET['id'];
         
@@ -105,7 +102,7 @@
             // 5.判断受影响行
            
             if(mysqli_affected_rows($link) > 0){
-                echo '还有子分类！';
+                echo '还有子分类！不能删除！';
                 header('refresh:3;url=./index.php');
             }else{
                 $sql = "delete from `shop_category` where `id` = {$id}";

@@ -32,7 +32,7 @@
 
 
     //  SQL语句
-    $sql = "select count(*) total from `shop_friendslink`";
+    $sql = "select count(*) total from `shop_message`";
     //发送执行
       
     $result = mysqli_query($link , $sql);
@@ -49,7 +49,7 @@
 
     //总页数至少为一页
     $totalPage = max(1,ceil($total / $num));
-    
+   
     //当前页数
     $p = isset($_GET['p']) ? $_GET['p'] + 0 : 1 ;
     // 如果当前页小于1，则重新设置为最小页码 保证最小页数为第一页
@@ -63,7 +63,20 @@
     //求偏移量
     $offset = ($p - 1) * $num;
     
-   
+    $sql = "select * from `".PIX."message`  order by `gid` desc limit {$offset},{$num}";
+
+        
+    // 发送
+    $result = mysqli_query($link , $sql);
+
+    // 检测错误
+    if(mysqli_errno($link) > 0){
+        $errno = mysqli_errno($link);
+        $error = mysqli_error($link);
+        echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
+        exit;
+    }
+    mysqli_free_result($result);
 ?>
 
 
@@ -79,31 +92,34 @@
         <link rel="stylesheet" href="../public/css/bootstrap.min.css">
     </head>
     <body>
-        <h1>友情链接浏览</h1>
+        <h1>评论浏览</h1>
         
             <!-- -======================= -->
 
         <div class="form-group">
-            <div class="col-sm-12 control-label" style="font-size:16px;font-weight:bold;background:#ccc;text-align:left;">友情链接信息</div>
+            <div class="col-sm-12 control-label" style="font-size:16px;font-weight:bold;background:#ccc;text-align:left;">评论信息</div>
         </div>
         <div class="cart-info2">
             <table class="cart-table2 table table-hover">
                 <thead>
                     <tr>
-                        <td>ID</td>
-                        <td>网站名</td>
-                        <td>网址</td>
-                        <td>操作</td>
+                        <td>id</td>
+                        <td>用户id</td>
+                        <td>商品ID</td>
+                        <td>用户名</td>
+                        <td>评论内容</td>
+                        <td>评论时间</td>
+                        <td align="right">操作</td>
                     </tr>
                 </thead>
                 <tbody>
-<?php
+    <?php
     //总页数
     $totally=0;
    
 
     //遍历订单
-    $sql = "select * from `".PIX."friendslink` order by `id` desc limit {$offset},{$num}";
+    $sql = "select * from `".PIX."message`";
    
     $result = mysqli_query($link,$sql);
     
@@ -112,38 +128,42 @@
         $errno = mysqli_errno($link);
         $error = mysqli_error($link);
         echo "<p><b style='font-size:1cm;color:red;'>Error ：{$sql} , 错误号：{$errno} , 错误信息：{$error}</b></p>";
-        header('refresh:3;url=./friendslink_index.php');
+        header('refresh:3;url=./message_index.php');
         exit;
     }
-    $friendsLink=[];
+    $messageInfo=[];
     if(mysqli_affected_rows($link)){
         while($row = mysqli_fetch_assoc($result)){
-            $friendsLink[]=$row;
+            $messageInfo[]=$row;
+            
         }
     }
 
     mysqli_free_result($result);
-   
+  
+    
+    ?>
 
-?>
+    <?php 
 
-<?php 
-
-    foreach($friendsLink as $key => $val): 
-
-?>
-
+    foreach($messageInfo as $key => $val): 
+        $addtime=date('Y-m-d H:i:s',$val['addtime']);
+    ?>
+                    
                     <tr>
                         <td><?php echo $val['id'] ?></td>
-                        <td><?php echo $val['name'] ?></td>
-                        <td><?php echo $val['address'] ?></td>
-                        <td><a href="friendslink_action.php?a=delete&id=<?=$val['id'] ?>" class="btn btn-danger">删除</a></td>
+                        <td><?php echo $val['uid'] ?></td>
+                        <td><?php echo $val['gid'] ?></td>
+                        <td><?php echo $val['user'] ?></td>
+                        <td><?php echo $val['content'] ?></td>
+                        <td><?php echo $addtime ?></td>
+                        <td align="right"><a href="./message_action.php?a=delete&id=<?=$val['id'] ?>" class="btn btn-danger">删除</a></td>
                     </tr>
-<?php
+    <?php
 
     endforeach; 
 
-?>
+    ?>
             
                 </tbody>
             </table>    
@@ -152,7 +172,7 @@
             <ul class="pagination">
                
                 <li>
-                    <a href="./friendslink_index.php?p=<?= $p - 1;?>" target="main" aria-label="Previous"><span aria-hidden="true">上一页</span></a>
+                    <a href="./message_index.php?p=<?= $p - 1;?>" target="main" aria-label="Previous"><span aria-hidden="true">上一页</span></a>
                 </li>
 
                 <?php
@@ -161,13 +181,10 @@
                     $_GET['p'] = $p + 1;
                     // 组装成URL参数
                     $query = http_build_query($_GET);
-                    // echo $query.'<br>';
-                    // ECHO '内容是'.$content.'<br>';
-                    // echo '内ss是'.$search.'<br>';
+                    
                 ?>
 
                 <?php
-
                     // 起始页码
                     $start = $p - 5;
                     $start = max($start , 1);
@@ -178,15 +195,15 @@
                     // 循环输出页码
                     for($i = $start; $i <= $end; $i++){
                         if($p == $i){
-                            echo "<li class='active'><a  href='./friendslink_index.php?p={$i}'>{$i}</a></li>";
+                            echo "<li class='active'><a  href='./message_index.php?p={$i}'>{$i}</a></li>";
                         }else{
-                            echo "<li><a href='./friendslink_index.php?p={$i}'>{$i}</a></li>";
+                            echo "<li><a href='./message_index.php?p={$i}'>{$i}</a></li>";
                         }
                     }
                 ?>
 
                 <li>
-                    <a href="./friendslink_index.php?p=<?= $p + 1;?>" target="main" aria-label="Next">
+                    <a href="./message_index.php?p=<?= $p + 1;?>" target="main" aria-label="Next">
                     <span aria-hidden="true">下一页</span></a>
                 </li>
                    

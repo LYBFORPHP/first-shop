@@ -16,9 +16,9 @@
     $sql = "select count(*) total from `shop_user`";
     $total = mysqli_query($link , $sql);
     $total = mysqli_fetch_assoc($total)['total'];
-    echo '总条数：' . $total . '<br>';
+   
     $totalPage = ceil($total / $num);
-    echo '总页码数：' . $totalPage . '<br>';
+    
     $p = isset($_GET['p']) ? $_GET['p'] : 1 ;
     // 如果当前页小于1，则重新设置为最小页码
     if($p < 1){
@@ -28,7 +28,7 @@
     if($p > $totalPage){
         $p = $totalPage;
     }
-    echo '当前页码数：' . $p . '<br>';
+    
 
     // 5.求偏移量
     $offset = ($p - 1) * $num;
@@ -54,7 +54,7 @@
     // 6.处理
     $userlist = []; // 接收遍历的结果集
 
-    echo '受影响行：' . mysqli_affected_rows($link);
+    
     if(mysqli_affected_rows($link) > 0){
         while($row = mysqli_fetch_assoc($result)){
             $userlist[] = $row;
@@ -84,6 +84,27 @@
         <link rel="stylesheet" href="../public/css/bootstrap.min.css">
     </head>
     <body>
+        <h1>商品浏览</h1>
+        <!--               搜索栏                     -->
+        <div class="container">
+      
+
+            <!--             搜索第一行
+                                 -->
+            <div class="row">
+                <form action="./goods_index.php" class="form-inline">
+                    <select name="search" style="width:200px" class="form-control">
+                        <option value="">请选择</option>
+                        <option value="name">商品名</option>
+                        <option value="id">ID</option>
+                    </select>
+                    <div class="form-group">
+                        <label for="exampleInputName2"> </label>
+                        <input name="content" type="text" class="form-control" id="exampleInputName2" value="<?php  echo $content = isset($_GET['content']) ? $_GET['content'] : '' ;?>">
+                    </div>
+                    <button type="submit" class="btn btn-default" style="font-weight:bold;background:lightblue;">搜索</button>
+                </form>
+            </div>
         <h2>用户浏览</h2>
 
         <table class="table table-hover">
@@ -112,10 +133,10 @@
                 <td><?php echo $val['user']; ?></td>
                 <td>
                 <?php if($val['icon']=='default.jpg'):?>
-               <img style="width:50px;" src="../../Common/goodsimage/default.jpg">
+               <img style="width:50px;" src="../../Home/user/usericon/default.jpg">
                 <?php else: ?>
                     
-                     <img style="width:50px;" src="../../Common/goodsimage/s_<?php echo $val['icon'];?>">
+                     <img style="width:50px;" src="../../Home/user/usericon/<?php echo $val['icon'];?>">
                 <?php endif;?> 
                 </td>
                 <td><?php echo $val['integral']; ?></td>

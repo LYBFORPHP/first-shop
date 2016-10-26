@@ -5,9 +5,7 @@
     ob_start();
 
     $a = $_GET['a'];
-    $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误信息：' . mysqli_connect_error());
-    // 2.设置字符集
-    mysqli_set_charset($link , 'utf8');
+    
 
 
 
@@ -19,7 +17,9 @@
         case 'update':
             $status = $_POST['status'];
             $id = $_GET['id'];
-            
+            $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误信息：' . mysqli_connect_error());
+            // 2.设置字符集
+            mysqli_set_charset($link , 'utf8');
             
             $sql = "update `".PIX."orders` set `status`={$status} where `id`={$id}";
 
@@ -43,4 +43,5 @@
                 }
         
         break;
-}
+
+    

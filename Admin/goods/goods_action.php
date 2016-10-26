@@ -6,16 +6,7 @@
     //根据不同操作执行不同区间
     switch($a){
         case 'add':
-            echo '执行商品添加<br>';
-            echo '<pre>';
-                print_r($_POST);
-            echo '</pre>';
-            echo '<pre>';
-                print_r($_FILES);
-            echo '</pre>';
-            echo '<pre>';
-                print_r($_SESSION);
-            echo '</pre>';
+            
            
 
 
@@ -29,11 +20,34 @@
             $time = time();
 
             //数据验证
-             
+            //商品名
+            $preg='/^[\x{4e00}-\x{9fa5}0-9a-zA-Z][\x{4e00}-\x{9fa5}\w]*$/u';
+            if(!preg_match($preg,$name)){
+                echo '<font color="red">请输入正确的商品名</font>';
+                //滚回注册页
+                //3秒后跳转
+                header('refresh:3;url=./goods_add.php?error=3');
+                exit;
+            }
 
-
-
-
+            //价格
+            $preg = '/[1-9]\d*.\d*|0.\d*[1-9]\d*/';
+            if(!preg_match($preg,$price)){
+                echo '<font color="red">价格只能为正数</font>';
+                //滚回注册页
+                //3秒后跳转
+                header('refresh:3;url=./goods_add.php?error=3');
+                exit;
+            }
+            //货存
+            $preg = '/[1-9]\d*/';
+            if(!preg_match($preg,$store)){
+                echo '<font color="red">库存只能为正整数</font>';
+                //滚回注册页
+                //3秒后跳转
+                header('refresh:3;url=./goods_add.php?error=3');
+                exit;
+            }
 
             //上传文件
             //判断是否有上传
@@ -77,7 +91,7 @@
                 //保存的名字
                 $picture = $upRes['name'];
             }
-            echo '保存在数据库的名字为: '.$picture; 
+            
             // 4.数据库操作.
             // 导入配置文件
             require '../../Common/config.php';
@@ -90,7 +104,7 @@
 
             // 3.准备SQL语句
             $sql = "insert into `".PIX."goods`(`cateid`,`picture`,`name`,`price`,`store`,`description`,`status`,`addtime`) values({$cateid},'{$picture}','{$name}',{$price},{$store},'{$desc}',0,{$time})";
-             echo $sql;
+            
 
             // 4.发送执行
             $res = mysqli_query($link , $sql);
@@ -216,7 +230,7 @@
 //_____________________________更新_______________________________//
 
         case 'update': 
-            echo '更新';
+           
           
             if($_FILES['myfile']['error'] == 4){
             //没有上传则使用默认值
@@ -290,7 +304,7 @@
                 $errno = mysqli_errno($link);
                 $error = mysqli_error($link);
 
-                echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>"
+                echo "<b style='color:red;font-size:1cm;'>Error {$errno}: {$error}</b>";
                 header('refresh:3;url=./goods_update.php');
                 exit;
             }
@@ -314,7 +328,7 @@
 
 //                       上架                        //
         case 'up':
-            echo '上架';
+            
       
             $goodsid = $_GET['id'];
             require '../../Common/config.php';
@@ -339,9 +353,9 @@
                 exit;
             }
             //如果受影响行大于0，则插入成功
-            echo mysqli_affected_rows($link);
+            
             if(mysqli_affected_rows($link) > 0){
-                echo "<b style='color:green;font-size:1cm;'>成功！</b>";
+                echo "<b style='color:green;font-size:1cm;'>上架成功！</b>";
                 header('refresh:3;url=./goods_index.php');
                 exit;
             }else{
@@ -358,7 +372,7 @@
 //               下架                        //
              
         case 'down':
-            echo '下架';
+            
            
             $goodsid = $_GET['id'];
             require '../../Common/config.php';
@@ -369,7 +383,7 @@
 
             // 3.准备SQL语句
             $sql = "update `".PIX."goods` set `status` = 2 where `id`={$goodsid}";
-            echo $sql;
+            
 
             // 4.发送执行
             $res = mysqli_query($link , $sql);
@@ -387,7 +401,7 @@
             //如果受影响行大于0，则插入成功
             
             if(mysqli_affected_rows($link) > 0){
-                echo "<b style='color:green;font-size:1cm;'>成功！</b>";
+                echo "<b style='color:green;font-size:1cm;'>下架成功！</b>";
                 
                 header('refresh:3;url=./goods_index.php');
                 exit;

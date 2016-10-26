@@ -60,7 +60,7 @@
 								</li>
 								<li>
 									<div class="register-button-box">
-										<input type="checkbox" name="check" value="${user.check}" onclick="this.value=this.checked?1: -1" />请阅读<a href="#">《vancl凡客诚品服务条款》</a>
+										<input type="checkbox" name="check" value="1"  />请阅读<a href="#">《vancl凡客诚品服务条款》</a>
 										
 											<button type="submit" class="register-button">立即注册</button>
 										

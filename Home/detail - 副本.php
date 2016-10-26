@@ -215,17 +215,12 @@
              <!--                        中部大广告                                    -->
             <div class="main-foucs" >
             <?php
-                $gid=isset($_GET['gid'])?$_GET['gid']+0:'';
-                
-                if($gid<28){
-                    header('location:./main_index.php');
-                    
-                }
-                 if($gid>42){
-                    header('location:./main_index.php');
-                    
+                $gid = $_GET['gid'] + 0 ;          
+                if($gid<1){
+                    header('location:./index.php');
+                    exit;
                 }   
-              
+
                 $sql = "select * from `shop_goods` where `id` = {$gid}";
     
                 // 执行
@@ -238,7 +233,7 @@
                     while($row = mysqli_fetch_assoc($result)){
                         $goodsInfo = $row;
                 }
-                
+               
                 //  exit;
                 // 释放资源
                 mysqli_free_result($result);
@@ -372,80 +367,4 @@
             </div>
         </div>
 
-
-<!--               评论区                 -->
-<?php
-    
-
-
-?>      
-        <div class="container">
-            
-            <div class="panel panel-warning">
-                <form action="./message/message_action.php?gid=<?= $gid;?>" method="post">
-                    <div class="panel-heading"><b>评论区</b></div>
-                    <div class="panel-body">
-                        <div style="width:100px; font-size:20px; float:left;margin-left:50px;">
-                            <p>我要评价：</p>
-                            <button type="submit" class="btn btn-info">提交评价</button>
-                        </div>
-                        <textarea rows="10" cols="100" name="message" style="float:right;margin-right:50px;">
-                        </textarea>   
-                    </div>
-                </form>
-                <?php
-                    $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误信息：'.mysqli_connect_error());
-
-                    //设置字符集
-                    mysqli_set_charset($link , 'utf8');
-                    //获取用户ID
-                   
-                    $sql = "select * from `".PIX."message` where `gid`='{$gid}'";
-                   
-                    
-                    $result = mysqli_query($link,$sql);
-
-                    //检测错误
-                    if(mysqli_errno($link)>0){
-                        $errno = mysqli_errno($link);
-                        $error = mysqli_error($link);
-                        echo "<p><b style='font-size:1cm;color:red;'>Error:{$sql},错误号：{$errno},错误信息:{$error}</b></p>";
-                        header('refresh:3;url=../main_index.php');
-                        exit; 
-                    }
-                    $messageinfo = [];
-
-                    if(mysqli_affected_rows($link)>0){
-                       
-                            
-                ?>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <td>用户名</td>
-                            <td>评论内容</td>
-                            <td align="right">评论时间</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php 
-                         while($row = mysqli_fetch_assoc($result)){
-                            $messageinfo = $row;
-                            $addtime=date('Y-m-d H:i:s',$messageinfo['addtime']);
-                            
-                            ?>
-                        <tr>
-                            <td><?= $messageinfo['user']?></td>
-                            <td><?= $messageinfo['content']?></td>
-                            <td align="right"><?= $addtime?></td>
-                        </tr>
-                         <?php  
-                        }
-                    }    
-                ?>    
-                    </tbody>
-                </table>
-               
-            </div>
-        </div>
 <?php include './footer_index.php'?>

@@ -6,9 +6,9 @@
     $age=$list['user']['age'];
    
    
-   $age = floor((time()-$age)/3600/24/365);
+    $age = floor((time()-$age)/3600/24/365);
    
-   require '../../Common/config.php';
+    require '../../Common/config.php';
 
     // 1.连接数据库
     $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());;
@@ -28,7 +28,7 @@
     }
     $userlist = []; // 接收遍历的结果集
 
-    echo '受影响行：' . mysqli_affected_rows($link);
+    
     if(mysqli_affected_rows($link) > 0){
         while($row = mysqli_fetch_assoc($result)){
             $userlist = $row;
@@ -45,6 +45,8 @@
       header('refresh:3;url=../user/showuser.php');
       exit;
     }
+    $sex = ['女','男','保密'];
+    $addtime = date('Y-m-d H:i:s',$userlist['addtime']);
 ?>
 
 <!DOCTYPE html>
@@ -100,7 +102,7 @@
                 <div class="form-group">
                   <label for="inputEmail3" class="col-sm-2 control-label">性别</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" placeholder="<?php echo $userlist['sex'];?>" disabled>
+                    <input type="text" class="form-control" placeholder="<?php echo $sex[$userlist['sex']];?>" disabled>
                   </div>
                 </div>
                 <div class="form-group">
@@ -130,7 +132,7 @@
                 <div class="form-group">
                   <label for="inputEmail3" class="col-sm-2 control-label">添加时间</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" placeholder="<?php echo $userlist['addtime'];?>" disabled>
+                    <input type="text" class="form-control" placeholder="<?php echo $addtime;?>" disabled>
                   </div>
                 </div>
                 <input type="hidden" name="userid" value ="<?php echo $_GET['id']; ?>" >

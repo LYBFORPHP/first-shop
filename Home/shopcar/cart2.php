@@ -1,7 +1,9 @@
 <?php
     
     include'cart_head.php';
-  
+    // echo '<pre>';
+    //     print_r($_SESSION);
+    // echo '</pre>';
   
 ?>
      <div class="cart-box">

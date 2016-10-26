@@ -17,7 +17,7 @@
 
     //检测错误
     if(mysqli_errno($link)>0){
-        $erron = mysqli_errno($link);
+        $errno = mysqli_errno($link);
         $error = mysqli_error($link);
         echo "<p><b style='font-size:1cm;color:red;'>Error:{$sql},错误号：{$errno},错误信息:{$error}</b></p>";
         header('refresh:3;url=./goods_index.php');
@@ -118,6 +118,7 @@
                 <label for="inputEmail3" class="col-sm-3 control-label">描述</label>
                 <div class="col-sm-6">
                     <textarea style="max-width:630px;" name="description" placeholder="商品描述" class="form-control" rows="3"></textarea>
+
                 </div>
             </div>
 

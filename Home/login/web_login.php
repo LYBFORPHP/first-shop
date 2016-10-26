@@ -2,9 +2,7 @@
 	
 	//前台登录
 	session_start();  //开启会话
-	echo '<pre>';
-	    print_r($_SERVER);
-	echo '</pre>';
+	
 	
 	//判断是否存在error，如果不存在就可以覆盖上一个地址
 	if(!isset($_GET['error'])){
@@ -48,6 +46,7 @@
 				</div>
 
 
+				
 
 				<form action="../web_action.php?a=login" method="post">
 				<div class="login">

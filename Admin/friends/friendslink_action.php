@@ -12,8 +12,23 @@
             $address = $_POST['address'];
 
             //正则判断
-
-
+            // 匹配网站名
+            $preg='/^[\x{4e00}-\x{9fa5}0-9a-zA-Z][\x{4e00}-\x{9fa5}\w]*$/u';
+            if(!preg_match($preg,$name)){
+                echo '<font color="red">帐号格式错误</font>';
+                //滚回注册页
+                //3秒后跳转
+                header('refresh:3;url=./friendslink_add.php?error=3');
+                exit;
+            }
+            //匹配网址
+            $preg='/^((http|ftp|https):\/\/)?[\w-_.]+(\/[\w-_]+)*\/?$/';
+            if(!preg_match($preg,$address)){
+                echo '<font color="red">请输入正确的网址</font>';
+                
+                header('refresh:3;url=./friendslink_add.php?error=3');
+                exit;
+            }
             // 1.连接数据库
             $link = @mysqli_connect(HOST,USER,PASS,DB) or exit('连接失败！错误消息：' . mysqli_connect_error());
 
